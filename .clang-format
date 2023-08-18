@@ -1,0 +1,16 @@
+Language: C
+BasedOnStyle: LLVM
+
+AccessModifierOffset: -4
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveDeclarations: Consecutive
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Stroustrup
+IndentWidth: 4
+PackConstructorInitializers: Never
+PointerAlignment: Right
+SpaceAfterCStyleCast: true

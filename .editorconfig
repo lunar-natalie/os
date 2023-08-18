@@ -1,0 +1,33 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+insert_final_newline = true
+tab_width = 4
+trim_trailing_whitespace = true
+
+[*.s]
+indent_style = tab
+tab_width = 8
+
+[*.ld]
+indent_style = tab
+tab_width = 8
+
+[grub.cfg{,.in}]
+indent_style = tab
+tab_width = 8
+
+[{CMakeLists.txt,*.cmake{,.in}}]
+tab_width = 2
+
+[*.sh]
+tab_width = 4
+
+[.{clang-format,clang-tidy}]
+tab_width = 2
+
+[*.md]
+tab_width = 2

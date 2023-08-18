@@ -1,0 +1,3 @@
+menuentry "os" {
+	multiboot /boot/$<TARGET_FILE_BASE_NAME:Kernel>
+}
