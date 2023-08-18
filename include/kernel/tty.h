@@ -11,6 +11,7 @@
 #define _KERNEL_TTY_H_
 
 void tty_init(void);
+
 void tty_writestring(const char * s);
 
 #endif // _KERNEL_TTY_H_
