@@ -60,3 +60,7 @@ load_target_platform()
 add_subdirectory(include)
 add_subdirectory(lib)
 add_subdirectory(src)
+
+if(os_ENABLE_IMAGE)
+  add_subdirectory(image)
+endif()
