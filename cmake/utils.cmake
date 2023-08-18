@@ -12,9 +12,9 @@
 # Sets ${PROJECT_NAME}_TARGET_TRIPLET using the compiler, if unset.
 #
 # Sets ${PROJECT_NAME}_TARGET_<PROP>, where <PROP> is a triplet property
-# (ARCH, VENDOR, SYS, ENV).
+# (MACH, ARCH, VENDOR, SYS, ENV).
 #
-# Sets ${PROJECT_NAME}_TARGET_PREFIX (<ARCH>-<ENV>).
+# Sets ${PROJECT_NAME}_TARGET_PREFIX (<MACH>-<ENV>).
 #
 # Ensures the correct toolchain components are used for the target platform.
 #
@@ -35,7 +35,7 @@ macro(load_target_platform)
   endif()
 
   if(${PROJECT_NAME}_TARGET_TRIPLET STREQUAL "")
-    message(FATAL_ERROR "Failed to obtain target machine information from the compiler.")
+    message(FATAL_ERROR "Failed to obtain target platform information from the compiler.")
   endif()
 
   message("-- Configuring build for target platform: ${${PROJECT_NAME}_TARGET_TRIPLET}")
@@ -44,32 +44,44 @@ macro(load_target_platform)
   string(REPLACE "-" ";" TRIPLET_LIST ${${PROJECT_NAME}_TARGET_TRIPLET})
   list(LENGTH TRIPLET_LIST TRIPLET_LENGTH)
   if(${TRIPLET_LENGTH} LESS 3)
-    message(FATAL_ERROR "Invalid target machine triplet.")
+    message(FATAL_ERROR "Invalid target platform triplet.")
   endif()
-  list(GET TRIPLET_LIST 0 ${PROJECT_NAME}_TARGET_ARCH)
+  list(GET TRIPLET_LIST 0 ${PROJECT_NAME}_TARGET_MACH)
   list(GET TRIPLET_LIST 1 ${PROJECT_NAME}_TARGET_VENDOR)
   list(GET TRIPLET_LIST 2 ${PROJECT_NAME}_TARGET_SYS)
   list(GET TRIPLET_LIST 3 ${PROJECT_NAME}_TARGET_ENV)
 
-  if(${${PROJECT_NAME}_TARGET_ARCH} STREQUAL "")
-    message(FATAL_ERROR "Invalid target architecture.")
+  if(${PROJECT_NAME}_TARGET_MACH STREQUAL "")
+    message(FATAL_ERROR "Invalid target machine.")
   endif()
-  if(${${PROJECT_NAME}_TARGET_VENDOR} STREQUAL "")
+  if(${PROJECT_NAME}_TARGET_VENDOR STREQUAL "")
     message(FATAL_ERROR "Invalid target vendor.")
   endif()
-  if(${${PROJECT_NAME}_TARGET_SYS} STREQUAL "")
+  if(${PROJECT_NAME}_TARGET_SYS STREQUAL "")
     message(FATAL_ERROR "Invalid target system.")
   endif()
-  if(${${PROJECT_NAME}_TARGET_ENV} STREQUAL "")
+  if(${PROJECT_NAME}_TARGET_ENV STREQUAL "")
     message(FATAL_ERROR "Invalid target environment.")
   endif()
+
+  # Use i386 arch if x86 machine
+  set(X86 "")
+  string(REGEX MATCH "i[0-9]86" X86 "${${PROJECT_NAME}_TARGET_MACH}")
+  if(X86 STREQUAL "")
+    set(${PROJECT_NAME}_TARGET_ARCH "${PROJECT_NAME}_TARGET_MACH")
+  else()
+    set(${PROJECT_NAME}_TARGET_ARCH "i386")
+  endif()
+
+  message("-- Building for machine: ${${PROJECT_NAME}_TARGET_MACH}")
+  message("-- Building for architecture: ${${PROJECT_NAME}_TARGET_ARCH}")
 
   # Load platform-specific build toolchain components
   if(HOST_TOOLCHAIN)
     set(${PROJECT_NAME}_TARGET_TOOLCHAIN_PREFIX "")
   else()
     set(${PROJECT_NAME}_TARGET_TOOLCHAIN_PREFIX
-      "${${PROJECT_NAME}_TARGET_ARCH}-${${PROJECT_NAME}_TARGET_ENV}")
+      "${${PROJECT_NAME}_TARGET_MACH}-${${PROJECT_NAME}_TARGET_ENV}")
 
     # Check if Clang is available for cross-compilation
     if(NOT(CMAKE_C_COMPILER_ID STREQUAL "Clang"))
@@ -87,10 +99,11 @@ macro(load_target_platform)
     endif()
 
     # Find AS
-    find_program(CMAKE_ASM_COMPILER
+    find_program(ASM_ATT_COMPILER
       ${${PROJECT_NAME}_TARGET_TOOLCHAIN_PREFIX}-as
       REQUIRED)
-    message("-- Using assembler: ${CMAKE_ASM_COMPILER}")
+    set(CMAKE_ASM-ATT_COMPILER ${ASM_ATT_COMPILER})
+    message("-- Using assembler: ${CMAKE_ASM-ATT_COMPILER}")
   endif()
 
   # Find LD

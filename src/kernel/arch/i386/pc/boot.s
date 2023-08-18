@@ -2,7 +2,6 @@
  * boot.s
  * Kernel bootstrap assembly for x86_64-pc.
  *
- * OS project
  * Copyright (c) 2023 Natalie Wiggins <islifepeachy@outlook.com>
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -14,6 +13,7 @@
 .set FLAGS,    ALIGN | MEMINFO  /* this is the Multiboot 'flag' field */
 .set MAGIC,    0x1BADB002       /* 'magic number' lets bootloader find the header */
 .set CHECKSUM, -(MAGIC + FLAGS) /* checksum of above, to prove we are multiboot */
+.set MODE_TYPE,0		/* video mode (linear gfx) */
 
 /*
 Declare a multiboot header that marks the program as a kernel. These are magic
@@ -27,6 +27,8 @@ forced to be within the first 8 KiB of the kernel file.
 .long MAGIC
 .long FLAGS
 .long CHECKSUM
+.skip 24
+.long MODE_TYPE
 
 /*
 The multiboot standard does not define the value of the stack pointer register
