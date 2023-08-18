@@ -10,6 +10,6 @@ file(GENERATE
 set(ISO_DIR ${CMAKE_CURRENT_BINARY_DIR}/iso)
 
 add_custom_target(Image ALL
-  COMMAND cp $<TARGET_FILE:Kernel> ${ISO_DIR}/boot/${KERNEL_NAME}
+  COMMAND cp $<TARGET_FILE:Kernel> ${ISO_DIR}/boot/$<TARGET_FILE_BASE_NAME:Kernel>
   COMMAND grub-mkrescue -o ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.iso ${ISO_DIR}
   DEPENDS Kernel)

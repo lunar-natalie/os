@@ -1,8 +1,9 @@
-# Kernel config for x86_64-pc.
+# Kernel config for i386-pc.
 
 update_parent(TARGET Kernel
   SOURCES
     "boot.s"
+    "vga.c"
   LINKER_SCRIPT "link.ld"
 )
 

@@ -16,6 +16,8 @@ option(os_ENABLE_CLANG_TIDY "Enable clang-tidy for processing source files" ON)
 include(cmake/utils.cmake)
 
 set(os_SOURCE_DIRNAMES
+  "include"
+  "lib"
   "src"
 )
 
@@ -55,4 +57,6 @@ set(CMAKE_C_STANDARD 17)
 load_target_platform()
 
 # Add source directories
+add_subdirectory(include)
+add_subdirectory(lib)
 add_subdirectory(src)

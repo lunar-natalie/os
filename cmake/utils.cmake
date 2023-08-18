@@ -115,6 +115,12 @@ macro(load_target_platform)
   message("-- Using linker: ${${PROJECT_NAME}_LINKER}")
   set(CMAKE_C_LINK_EXECUTABLE
     "${${PROJECT_NAME}_LINKER} <FLAGS> <CMAKE_C_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>")
+
+  # Add platform to compile definitions
+  string(TOUPPER ${${PROJECT_NAME}_TARGET_ARCH} ARCH_UPPER)
+  string(TOUPPER ${${PROJECT_NAME}_TARGET_VENDOR} VENDOR_UPPER)
+  add_compile_definitions(_${ARCH_UPPER}_)
+  add_compile_definitions(_${VENDOR_UPPER}_)
 endmacro()
 
 # Calls `add_subdirectory` to load platform-specific sources for the current

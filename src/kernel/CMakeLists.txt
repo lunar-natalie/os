@@ -2,6 +2,7 @@
 
 add_executable(Kernel
   "main.c"
+  "tty.c"
 )
 
 set_target_properties(Kernel
@@ -16,6 +17,12 @@ target_compile_options(Kernel
 
 target_link_options(Kernel
   PRIVATE -N -nostdlib -static -z noexecstack --no-warn-rwx-segments
+)
+
+target_link_libraries(Kernel
+  PUBLIC
+    Include
+    Libc
 )
 
 add_platform_subdirectory()
