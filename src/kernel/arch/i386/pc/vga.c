@@ -41,11 +41,19 @@ void vga_putentryat(
 
 void vga_putchar(struct vga * vga, char c)
 {
-    vga_putentryat(vga, c, vga->color, vga->column, vga->row);
-    if (++vga->column == VGA_WIDTH) {
+    if (c == '\n') {
         vga->column = 0;
         if (++vga->row == VGA_HEIGHT) {
             vga->row = 0;
+        }
+    }
+    else {
+        vga_putentryat(vga, c, vga->color, vga->column, vga->row);
+        if (++vga->column == VGA_WIDTH) {
+            vga->column = 0;
+            if (++vga->row == VGA_HEIGHT) {
+                vga->row = 0;
+            }
         }
     }
 }

@@ -12,5 +12,5 @@
 void kernel_main(void)
 {
     tty_init();
-    tty_writestring("Hello, world!");
+    tty_writestring("Hello, world!\n");
 }
