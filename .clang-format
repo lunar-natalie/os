@@ -12,5 +12,5 @@ BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Stroustrup
 IndentWidth: 4
 PackConstructorInitializers: Never
-PointerAlignment: Right
+PointerAlignment: Middle
 SpaceAfterCStyleCast: true
