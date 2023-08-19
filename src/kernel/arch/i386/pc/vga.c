@@ -37,27 +37,26 @@ void vga_put_entry_at(
     vga->buffer[make_vga_index(x, y)] = make_vga_entry(c, color);
 }
 
+void vga_next_line(struct vga * vga)
+{
+    vga->column = 0;
+    if (vga->row + 1 == VGA_HEIGHT) {
+        vga_scroll(vga);
+    }
+    else {
+        ++vga->row;
+    }
+}
+
 void vga_put_char(struct vga * vga, char c)
 {
     if (c == '\n') {
-        vga->column = 0;
-        if (vga->row + 1 == VGA_HEIGHT) {
-            vga_scroll(vga);
-        }
-        else {
-            ++vga->row;
-        }
+        vga_next_line(vga);
     }
     else {
         vga_put_entry_at(vga, c, vga->color, vga->column, vga->row);
         if (++vga->column == VGA_WIDTH) {
-            vga->column = 0;
-            if (vga->row + 1 == VGA_HEIGHT) {
-                vga_scroll(vga);
-            }
-            else {
-                ++vga->row;
-            }
+            vga_next_line(vga);
         }
     }
 }
