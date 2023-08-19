@@ -40,7 +40,7 @@ int printf(const char * restrict format, ...)
     va_list args;
     va_start(args, format);
 
-    for (; *format != '\0'; ++format) {
+    while (*format != '\0') {
         if (*format == '%') {
             char type = *++format;
             // char
@@ -78,6 +78,8 @@ int printf(const char * restrict format, ...)
             tty_put_char(*format);
             ++result;
         }
+
+        ++format;
     }
 
     va_end(args);
