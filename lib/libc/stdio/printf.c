@@ -34,6 +34,7 @@ int printf(const char * restrict format, ...)
 {
     int result = 0;
 
+    char   type;
     int    value_arg;
     char * string_arg;
 
@@ -42,7 +43,7 @@ int printf(const char * restrict format, ...)
 
     while (*format != '\0') {
         if (*format == '%') {
-            char type = *++format;
+            type = *++format;
             // char
             if (type == 'c') {
                 value_arg = va_arg(args, int);
