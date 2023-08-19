@@ -1,7 +1,9 @@
 # libc config.
 
 add_library(Libc
-  "strlen.c"
+  "stdio/printf.c"
+  "string/memcpy.c"
+  "string/strlen.c"
 )
 
 set_target_properties(Libc

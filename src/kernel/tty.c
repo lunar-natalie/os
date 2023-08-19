@@ -8,16 +8,23 @@
 
 #include <kernel/tty.h>
 
+#include <stddef.h>
+
 #include <kernel/arch/i386/pc/vga.h>
 
-struct vga vga;
+static struct vga vga;
 
 void tty_init(void)
 {
     vga_init(&vga);
 }
 
-void tty_writestring(const char * s)
+void tty_put_char(char c)
 {
-    vga_writestring(&vga, s);
+    vga_put_char(&vga, c);
+}
+
+size_t tty_write_string(const char * s)
+{
+    return vga_write_string(&vga, s);
 }

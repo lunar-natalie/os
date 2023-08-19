@@ -10,8 +10,12 @@
 #ifndef _KERNEL_TTY_H_
 #define _KERNEL_TTY_H_
 
+#include <stddef.h>
+
 void tty_init(void);
 
-void tty_writestring(const char * s);
+void tty_put_char(char c);
+
+size_t tty_write_string(const char * s);
 
 #endif // _KERNEL_TTY_H_

@@ -10,7 +10,6 @@
 
 #include <stddef.h>
 #include <stdint.h>
-
 #include <string.h>
 
 void vga_init(struct vga * vga)
@@ -19,53 +18,66 @@ void vga_init(struct vga * vga)
     vga->column = 0;
     vga->color  = make_vga_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
     vga->buffer = (uint16_t *) VGA_BUFFER;
-    for (size_t y = 0; y < VGA_HEIGHT; y++) {
-        for (size_t x = 0; x < VGA_WIDTH; x++) {
+    for (size_t y = 0; y < VGA_HEIGHT; ++y) {
+        for (size_t x = 0; x < VGA_WIDTH; ++x) {
             const size_t index = y * VGA_WIDTH + x;
             vga->buffer[index] = make_vga_entry(' ', vga->color);
         }
     }
 }
 
-void vga_setcolor(struct vga * vga, uint8_t color)
+void vga_set_color(struct vga * vga, uint8_t color)
 {
     vga->color = color;
 }
 
-void vga_putentryat(
-    struct vga * vga, char c, uint8_t color, uint16_t x, uint16_t y)
+void vga_put_entry_at(
+    struct vga * vga, char c, uint8_t color, size_t x, size_t y)
 {
-    const size_t index = y * VGA_WIDTH + x;
-    vga->buffer[index] = make_vga_entry(c, color);
+    vga->buffer[make_vga_index(x, y)] = make_vga_entry(c, color);
 }
 
-void vga_putchar(struct vga * vga, char c)
+void vga_put_char(struct vga * vga, char c)
 {
     if (c == '\n') {
         vga->column = 0;
         if (++vga->row == VGA_HEIGHT) {
-            vga->row = 0;
+            vga_scroll(vga);
         }
     }
     else {
-        vga_putentryat(vga, c, vga->color, vga->column, vga->row);
+        vga_put_entry_at(vga, c, vga->color, vga->column, vga->row);
         if (++vga->column == VGA_WIDTH) {
             vga->column = 0;
             if (++vga->row == VGA_HEIGHT) {
-                vga->row = 0;
+                vga_scroll(vga);
             }
         }
     }
 }
 
-void vga_write(struct vga * vga, const char * s, size_t size)
+void vga_scroll(struct vga * vga)
 {
-    for (size_t i = 0; i < size; i++) {
-        vga_putchar(vga, s[i]);
+    for (size_t y = 0; y < VGA_HEIGHT - 1; ++y) {
+        memcpy((void *) (vga->buffer + y),
+               (void *) (vga->buffer + y + 1),
+               VGA_WIDTH);
+    }
+    for (size_t x = 0; x < VGA_WIDTH; ++x) {
+        vga_put_entry_at(vga, 0, vga->column, x, VGA_HEIGHT - 1);
     }
 }
 
-void vga_writestring(struct vga * vga, const char * s)
+void vga_write(struct vga * vga, const char * s, size_t size)
 {
-    vga_write(vga, s, strlen(s));
+    for (size_t i = 0; i < size; ++i) {
+        vga_put_char(vga, s[i]);
+    }
+}
+
+size_t vga_write_string(struct vga * vga, const char * s)
+{
+    size_t len = strlen(s);
+    vga_write(vga, s, len);
+    return len;
 }
