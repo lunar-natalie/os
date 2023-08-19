@@ -9,7 +9,6 @@
 
 #include <kernel/tty.h>
 
-#include <stddef.h>
 #include <stdio.h>
 
 #include <kernel/arch/i386/pc/vga.h>
