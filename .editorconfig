@@ -29,5 +29,8 @@ tab_width = 4
 [.{clang-format,clang-tidy}]
 tab_width = 2
 
+[*.json]
+tab_width = 2
+
 [*.md]
 tab_width = 2

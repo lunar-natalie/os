@@ -1,9 +1,6 @@
 {
   "files.associations": {
-    "stdint.h": "c",
-    "string.h": "c",
-    "vga.h": "c",
-    "stddef.h": "c",
-    "tty.h": "c"
+    "*.h": "c",
+    "functional": "c"
   }
 }
