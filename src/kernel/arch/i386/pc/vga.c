@@ -41,16 +41,22 @@ void vga_put_char(struct vga * vga, char c)
 {
     if (c == '\n') {
         vga->column = 0;
-        if (++vga->row == VGA_HEIGHT) {
+        if (vga->row + 1 == VGA_HEIGHT) {
             vga_scroll(vga);
+        }
+        else {
+            ++vga->row;
         }
     }
     else {
         vga_put_entry_at(vga, c, vga->color, vga->column, vga->row);
         if (++vga->column == VGA_WIDTH) {
             vga->column = 0;
-            if (++vga->row == VGA_HEIGHT) {
+            if (vga->row + 1 == VGA_HEIGHT) {
                 vga_scroll(vga);
+            }
+            else {
+                ++vga->row;
             }
         }
     }
@@ -58,13 +64,16 @@ void vga_put_char(struct vga * vga, char c)
 
 void vga_scroll(struct vga * vga)
 {
+    const static uint16_t last_row = (VGA_HEIGHT - 1) * VGA_WIDTH;
+
     for (size_t y = 0; y < VGA_HEIGHT - 1; ++y) {
-        memcpy((void *) (vga->buffer + y),
-               (void *) (vga->buffer + y + 1),
+        memcpy((void *) (vga->buffer + (y * VGA_WIDTH)),
+               (void *) (vga->buffer + ((y + 1) * VGA_WIDTH)),
                VGA_WIDTH);
     }
-    for (size_t x = 0; x < VGA_WIDTH; ++x) {
-        vga_put_entry_at(vga, 0, vga->column, x, VGA_HEIGHT - 1);
+
+    for (size_t i = last_row; i < last_row + VGA_WIDTH; ++i) {
+        vga->buffer[i] = 0;
     }
 }
 
