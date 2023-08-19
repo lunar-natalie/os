@@ -7,8 +7,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifndef _KERNEL_ARCH_I386_PC_VGA_H_
-#define _KERNEL_ARCH_I386_PC_VGA_H_
+#ifndef _KERNEL_ARCH_I386_PC_VGA_H
+#define _KERNEL_ARCH_I386_PC_VGA_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -75,4 +75,4 @@ void vga_write(struct vga * vga, const char * s, size_t size);
 
 size_t vga_write_string(struct vga * vga, const char * s);
 
-#endif // _KERNEL_ARCH_I386_PC_VGA_H_
+#endif // _KERNEL_ARCH_I386_PC_VGA_H

@@ -7,11 +7,11 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#ifndef _STDIO_H_
-#define _STDIO_H_
+#ifndef _STDIO_H
+#define _STDIO_H
 
 #include <stddef.h>
 
 int printf(const char * restrict format, ...);
 
-#endif // _STDIO_H_
+#endif // _STDIO_H
