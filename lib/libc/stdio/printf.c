@@ -34,44 +34,55 @@ int printf(const char * restrict format, ...)
 {
     int result = 0;
 
+    va_list args;
+    va_start(args, format);
+
+    result = _vprintf(format, &args);
+
+    va_end(args);
+
+    return result;
+}
+
+int _vprintf(const char * restrict format, va_list * const args)
+{
+    int result = 0;
+
     char   type;
     int    value_arg;
     char * string_arg;
 
-    va_list args;
-    va_start(args, format);
-
     while (*format != '\0') {
         if (*format == '%') {
             type = *++format;
-            // char
+            /* char */
             if (type == 'c') {
-                value_arg = va_arg(args, int);
+                value_arg = va_arg(*args, int);
                 tty_put_char(value_arg);
                 ++result;
             }
-            // int
+            /* int */
             else if (type == 'd' || type == 'i') {
-                value_arg = va_arg(args, int);
+                value_arg = va_arg(*args, int);
                 if (value_arg < 0) {
                     value_arg = -value_arg;
                     tty_put_char('-');
                 }
                 result += tty_write_string(convert(value_arg, 10));
             }
-            // octal
+            /* octal */
             else if (type == 'o') {
-                value_arg = va_arg(args, unsigned int);
+                value_arg = va_arg(*args, unsigned int);
                 result += tty_write_string(convert(value_arg, 8));
             }
-            // string
+            /* string */
             else if (type == 's') {
-                string_arg = va_arg(args, char *);
+                string_arg = va_arg(*args, char *);
                 result += tty_write_string(string_arg);
             }
-            // hex
+            /* hex */
             else if (type == 'x') {
-                value_arg = va_arg(args, unsigned int);
+                value_arg = va_arg(*args, unsigned int);
                 result += tty_write_string(convert(value_arg, 16));
             }
         }
@@ -82,8 +93,6 @@ int printf(const char * restrict format, ...)
 
         ++format;
     }
-
-    va_end(args);
 
     return result;
 }

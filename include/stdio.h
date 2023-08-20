@@ -10,8 +10,11 @@
 #ifndef _STDIO_H
 #define _STDIO_H
 
+#include <stdarg.h>
 #include <stddef.h>
 
 int printf(const char * restrict format, ...);
 
-#endif // _STDIO_H
+int _vprintf(const char * restrict format, va_list * const args);
+
+#endif /* _STDIO_H */

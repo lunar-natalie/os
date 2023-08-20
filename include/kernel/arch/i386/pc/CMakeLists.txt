@@ -2,5 +2,6 @@
 
 update_parent(TARGET Include
   SOURCES
+    "gdt.h"
     "vga.h"
 )

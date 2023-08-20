@@ -75,4 +75,4 @@ void vga_write(struct vga * vga, const char * s, size_t size);
 
 size_t vga_write_string(struct vga * vga, const char * s);
 
-#endif // _KERNEL_ARCH_I386_PC_VGA_H
+#endif /* _KERNEL_ARCH_I386_PC_VGA_H */

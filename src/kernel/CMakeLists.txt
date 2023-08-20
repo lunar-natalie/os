@@ -1,7 +1,7 @@
 # Kernel config.
 
 add_executable(Kernel
-  "main.c"
+  "error.c"
   "tty.c"
 )
 

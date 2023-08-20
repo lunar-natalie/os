@@ -3,6 +3,9 @@
 update_parent(TARGET Kernel
   SOURCES
     "boot.s"
+    "gdt.c"
+    "gdt.s"
+    "main.c"
     "vga.c"
   LINKER_SCRIPT "link.ld"
 )

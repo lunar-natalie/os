@@ -18,4 +18,4 @@ void tty_put_char(char c);
 
 size_t tty_write_string(const char * s);
 
-#endif // _KERNEL_TTY_H
+#endif /* _KERNEL_TTY_H */

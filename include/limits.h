@@ -11,5 +11,6 @@
 #define _LIMITS_H
 
 #define UINT_MAX 255
+#define UINT16_MAX 65535
 
-#endif // _LIMITS_H
+#endif /* _LIMITS_H */

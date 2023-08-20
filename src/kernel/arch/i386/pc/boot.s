@@ -40,7 +40,7 @@ _start:
 	 */
 
 	/* Load stack pointer */
-	mov $stack_top, %esp
+	mov     $stack_top, %esp
 
 	/*
 	 * Enter high level C kernel.
@@ -49,12 +49,18 @@ _start:
 	 * to the System V ABI. This state is preserved as the stack is
 	 * initially empty and 16-bit aligned.
 	 */
-	call kernel_main
+	call    kernel_main
 
-	/* Stop execution */
-	cli
+_end:
+    /* Stop execution */
+    cli
 1:	hlt				/* Halt on NMI */
-	jmp 1b
+	jmp     1b
+
+.global kernel_exit
+.type kernel_exit, @function
+kernel_exit:
+    jmp     _end
 
 /* Set _start symbol size for debugging/call tracing */
 .size _start, . - _start
