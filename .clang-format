@@ -3,7 +3,8 @@ BasedOnStyle: LLVM
 
 AccessModifierOffset: -4
 AlignConsecutiveAssignments: AcrossComments
-AlignConsecutiveDeclarations: Consecutive
+AlignConsecutiveBitFields: AcrossComments
+AlignConsecutiveDeclarations: AcrossComments
 AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
 BinPackArguments: false
