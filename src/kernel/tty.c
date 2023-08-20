@@ -12,7 +12,7 @@
 
 #include <kernel/arch/i386/pc/vga.h>
 
-static struct vga vga;
+static vga_t vga;
 
 void tty_init(void)
 {

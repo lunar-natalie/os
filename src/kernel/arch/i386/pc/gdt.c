@@ -8,18 +8,17 @@
 
 #include <kernel/arch/i386/pc/gdt.h>
 
-#include <limits.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #include <kernel/error.h>
 
-static uint8_t  gdt_flat[6];
 static uint16_t task_state[UINT16_MAX];
 
-void encode_gdt_entry(uint8_t * dest, struct segment_descriptor const * source)
+void encode_gdt_entry(uint8_t * dest, segment_descriptor_t const * source)
 {
     if (source->limit > GDT_MAX_LIMIT) {
-        kernel_error("Cannot encode GDT limit larger than %d", GDT_MAX_LIMIT);
+        kernel_error("Cannot encode GDT limit larger than 0x%x", GDT_MAX_LIMIT);
     }
 
     /* Limit */
@@ -46,45 +45,48 @@ void encode_gdt_entry(uint8_t * dest, struct segment_descriptor const * source)
 
 void gdt_init(void)
 {
-    struct segment_descriptor kcs; /* Kernel code segment */
-    struct segment_descriptor kds; /* Kernel data segment */
-    struct segment_descriptor ucs; /* User code segment */
-    struct segment_descriptor uds; /* User data segment */
-    struct segment_descriptor tss; /* Task state segment */
+    const size_t         GDT_LENGTH = 6;
+    uint8_t              gdt[GDT_LENGTH];
+    segment_descriptor_t desc[GDT_LENGTH - 1];
 
-    kcs.base   = (uint32_t *) 0;
-    kcs.limit  = (uint64_t *) 0xFFFFF;
-    kcs.access = (uint8_t) (ACCESS_BITS_RW | ACCESS_BITS_E | ACCESS_BITS_S
-                            | ACCESS_BITS_P);
-    kcs.flags  = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
+    /* Kernel code segment */
+    desc[0].base   = (uint32_t *) 0;
+    desc[0].limit  = (uint64_t *) 0xFFFFF;
+    desc[0].access = (uint8_t) (ACCESS_BITS_RW | ACCESS_BITS_E | ACCESS_BITS_S
+                                | ACCESS_BITS_P);
+    desc[0].flags  = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
 
-    kds.base   = (uint32_t *) 0;
-    kds.limit  = (uint64_t *) 0xFFFFF;
-    kds.access = (uint8_t) (ACCESS_BITS_RW | ACCESS_BITS_S | ACCESS_BITS_P);
-    kds.flags  = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
+    /* Kernel data segment */
+    desc[1].base   = (uint32_t *) 0;
+    desc[1].limit  = (uint64_t *) 0xFFFFF;
+    desc[1].access = (uint8_t) (ACCESS_BITS_RW | ACCESS_BITS_S | ACCESS_BITS_P);
+    desc[1].flags  = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
 
-    ucs.base   = (uint32_t *) 0;
-    ucs.limit  = (uint64_t *) 0xFFFFF;
-    ucs.access = (uint8_t) (ACCESS_BITS_RW | ACCESS_BITS_E | ACCESS_BITS_S
-                            | ACCESS_BITS_DPL | ACCESS_BITS_P);
-    ucs.flags  = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
+    /* User code segment */
+    desc[2].base   = (uint32_t *) 0;
+    desc[2].limit  = (uint64_t *) 0xFFFFF;
+    desc[2].access = (uint8_t) (ACCESS_BITS_RW | ACCESS_BITS_E | ACCESS_BITS_S
+                                | ACCESS_BITS_DPL | ACCESS_BITS_P);
+    desc[2].flags  = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
 
-    uds.base   = (uint32_t *) 0;
-    uds.limit  = (uint64_t *) 0xFFFFF;
-    uds.access = (uint8_t) (ACCESS_BITS_S | ACCESS_BITS_DPL | ACCESS_BITS_P);
-    uds.flags  = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
+    /* User data segment */
+    desc[3].base  = (uint32_t *) 0;
+    desc[3].limit = (uint64_t *) 0xFFFFF;
+    desc[3].access =
+        (uint8_t) (ACCESS_BITS_S | ACCESS_BITS_DPL | ACCESS_BITS_P);
+    desc[3].flags = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
 
-    tss.base   = (uint32_t *) &task_state;
-    tss.limit  = (uint64_t *) UINT16_MAX;
-    tss.access = (uint8_t) (ACCESS_BITS_A | ACCESS_BITS_E | ACCESS_BITS_P);
-    tss.flags  = 0;
+    /* Task state segment */
+    desc[4].base   = (uint32_t *) &task_state;
+    desc[4].limit  = (uint64_t *) UINT16_MAX;
+    desc[4].access = (uint8_t) (ACCESS_BITS_A | ACCESS_BITS_E | ACCESS_BITS_P);
+    desc[4].flags  = 0;
 
-    gdt_flat[0] = GDT_ENTRY_NULL;
-    encode_gdt_entry(gdt_flat + 8, &kcs);
-    encode_gdt_entry(gdt_flat + 16, &kds);
-    encode_gdt_entry(gdt_flat + 32, &ucs);
-    encode_gdt_entry(gdt_flat + 40, &uds);
-    encode_gdt_entry(gdt_flat + 48, &tss);
+    /* Encode */
+    gdt[0] = GDT_ENTRY_NULL;
+    for (uint8_t i = 1, j = 0; i < GDT_LENGTH * sizeof(uint8_t); ++i, ++j) {
+        encode_gdt_entry(&gdt[i], &desc[j]);
+    }
 
-    load_gdt(gdt_flat);
+    load_gdt(gdt);
 }

@@ -12,7 +12,7 @@
 #include <stdint.h>
 #include <string.h>
 
-void vga_init(struct vga * vga)
+void vga_init(vga_t * vga)
 {
     vga->row    = 0;
     vga->column = 0;
@@ -26,18 +26,18 @@ void vga_init(struct vga * vga)
     }
 }
 
-void vga_set_color(struct vga * vga, uint8_t color)
+void vga_set_color(vga_t * vga, uint8_t color)
 {
     vga->color = color;
 }
 
 void vga_put_entry_at(
-    struct vga * vga, char c, uint8_t color, size_t x, size_t y)
+    vga_t * vga, char c, uint8_t color, size_t x, size_t y)
 {
     vga->buffer[make_vga_index(x, y)] = make_vga_entry(c, color);
 }
 
-void vga_next_line(struct vga * vga)
+void vga_next_line(vga_t * vga)
 {
     vga->column = 0;
     if (vga->row + 1 == VGA_HEIGHT) {
@@ -48,7 +48,7 @@ void vga_next_line(struct vga * vga)
     }
 }
 
-void vga_put_char(struct vga * vga, char c)
+void vga_put_char(vga_t * vga, char c)
 {
     if (c == '\n') {
         vga_next_line(vga);
@@ -61,7 +61,7 @@ void vga_put_char(struct vga * vga, char c)
     }
 }
 
-void vga_scroll(struct vga * vga)
+void vga_scroll(vga_t * vga)
 {
     const static uint16_t last_row = (VGA_HEIGHT - 1) * VGA_WIDTH;
 
@@ -76,14 +76,14 @@ void vga_scroll(struct vga * vga)
     }
 }
 
-void vga_write(struct vga * vga, const char * s, size_t size)
+void vga_write(vga_t * vga, const char * s, size_t size)
 {
     for (size_t i = 0; i < size; ++i) {
         vga_put_char(vga, s[i]);
     }
 }
 
-size_t vga_write_string(struct vga * vga, const char * s)
+size_t vga_write_string(vga_t * vga, const char * s)
 {
     size_t len = strlen(s);
     vga_write(vga, s, len);

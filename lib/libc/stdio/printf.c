@@ -8,7 +8,6 @@
 
 #include <stdio.h>
 
-#include <limits.h>
 #include <stdarg.h>
 
 #include <kernel/tty.h>
@@ -16,10 +15,10 @@
 char * convert(unsigned int num, int base)
 {
     static char digits[] = "0123456789ABCDEF";
-    static char buffer[UINT_MAX];
+    static char buffer[255];
     char *      ptr;
 
-    ptr  = &buffer[UINT_MAX - 1];
+    ptr  = &buffer[254];
     *ptr = '\0';
 
     do {

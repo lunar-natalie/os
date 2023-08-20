@@ -36,7 +36,9 @@ struct segment_descriptor {
     uint8_t    flags;
 };
 
-void encode_gdt_entry(uint8_t * dest, struct segment_descriptor const * source);
+typedef struct segment_descriptor segment_descriptor_t;
+
+void encode_gdt_entry(uint8_t * dest, segment_descriptor_t const * source);
 
 extern void load_gdt(uint8_t * data);
 
