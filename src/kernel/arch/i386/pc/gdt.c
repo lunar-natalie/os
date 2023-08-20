@@ -13,9 +13,14 @@
 
 #include <kernel/error.h>
 
+/* GDT with one null segment, two ring 0 segments, two ring 3 segments, TSS
+ * segment (ring 0 segments) */
+#define GDT_LENGTH 6
+static gdt_entry_t gdt[GDT_LENGTH];
+
 static uint16_t task_state[UINT16_MAX];
 
-void encode_gdt_entry(uint8_t * dest, segment_descriptor_t const * source)
+void encode_gdt_entry(gdt_entry_t * dest, segment_descriptor_t const * source)
 {
     if (source->limit > GDT_MAX_LIMIT) {
         kernel_error("Cannot encode GDT limit larger than 0x%x", GDT_MAX_LIMIT);
@@ -23,30 +28,23 @@ void encode_gdt_entry(uint8_t * dest, segment_descriptor_t const * source)
 
     /* Limit */
     const uint64_t limit_value = (uint64_t) source->limit;
-
-    dest[0] = (uint8_t) (limit_value & 0xFF);         /* Bits 0-7 */
-    dest[1] = (uint8_t) ((limit_value >> 8) & 0xFF);  /* Bits 8-15 */
-    dest[6] = (uint8_t) ((limit_value >> 16) & 0x0F); /* Bits 16-19  */
+    dest->limit_low            = limit_value & 0xFFFF;       /* Bits 0-15 */
+    dest->limit_high           = (limit_value >> 16) & 0x0F; /* Bits 16-19  */
 
     /* Base */
     const uint32_t base_value = (uint32_t) source->base;
-
-    dest[2] = (uint8_t) (base_value & 0xFF);         /* Bits 0-7 */
-    dest[3] = (uint8_t) ((base_value >> 8) & 0xFF);  /* Bits 8-15 */
-    dest[4] = (uint8_t) ((base_value >> 16) & 0xFF); /* Bits 16-23 */
-    dest[7] = (uint8_t) ((base_value >> 24) & 0xFF); /* Bits 24-31 */
+    dest->base_low            = base_value & 0xFFFFFF; /* Bits 0-24 */
+    dest->base_high           = (base_value >> 24);    /* Bits 24-31 */
 
     /* Access byte */
-    dest[5] = source->access;
+    dest->access = source->access;
 
     /* Flags */
-    dest[6] |= source->flags << 4; /* Bits 0-3 */
+    dest->flags = source->flags;
 }
 
 void gdt_init(void)
 {
-    const size_t         GDT_LENGTH = 6;
-    uint8_t              gdt[GDT_LENGTH];
     segment_descriptor_t desc[GDT_LENGTH - 1];
 
     /* Kernel code segment */

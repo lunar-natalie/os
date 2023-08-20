@@ -62,13 +62,33 @@ struct segment_descriptor {
 
 typedef struct segment_descriptor segment_descriptor_t;
 
-void encode_gdt_entry(uint8_t * dest, segment_descriptor_t const * source);
+/* GDT entry bit-fields. */
+struct gdt_entry {
+    /* Limit bits 0-15 */
+    unsigned int limit_low  : 16;
+    /* Base bits 0-15 */
+    unsigned int base_low   : 24;
+    /* Access bits */
+    unsigned int access     : 8;
+    /* Limit bits 16-19  */
+    unsigned int limit_high : 4;
+    /* Only used in software; has no effect on hardware */
+    unsigned int available  : 1;
+    /* Flag bits */
+    unsigned int flags      : 3;
+    /* Base bits 24-31 */
+    unsigned int base_high  : 8;
+} __attribute__((packed));
 
-extern void load_gdt(uint8_t * data);
+typedef struct gdt_entry gdt_entry_t;
+
+void encode_gdt_entry(gdt_entry_t * dest, segment_descriptor_t const * source);
+
+extern void load_gdt(gdt_entry_t * data);
 
 void gdt_init(void);
 
-const static uint64_t * GDT_MAX_LIMIT  = (uint64_t *) 0xFFFFF;
-const static uint8_t    GDT_ENTRY_NULL = 0;
+const static uint64_t *  GDT_MAX_LIMIT  = (uint64_t *) 0xFFFFF;
+const static gdt_entry_t GDT_ENTRY_NULL = {};
 
 #endif /* _KERNEL_ARCH_I386_PC_GDT_H */
