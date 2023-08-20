@@ -3,6 +3,7 @@
 add_library(Libc
   "stdio/printf.c"
   "string/memcpy.c"
+  "string/memset.c"
   "string/strlen.c"
 )
 
