@@ -13,20 +13,44 @@
 #include <stdint.h>
 
 enum access_bits {
-    ACCESS_BITS_A   = 0b00000001,
-    ACCESS_BITS_RW  = 0b00000010,
-    ACCESS_BITS_DC  = 0b00000100,
-    ACCESS_BITS_E   = 0b00001000,
-    ACCESS_BITS_S   = 0b00010000,
+    /* Present bit. Must be set for any valid segment. */
+    ACCESS_BITS_P   = 0b10000000,
+    /* Descriptor privellege level (ring 0-3). */
     ACCESS_BITS_DPL = 0b01100000,
-    ACCESS_BITS_P   = 0b10000000
+    /* Descriptor type bit. Clear if system segment, set if code or data
+     * segment. */
+    ACCESS_BITS_S   = 0b00010000,
+    /* Executable bit. */
+    ACCESS_BITS_E   = 0b00001000,
+    /* Direction/conforming bit.
+     *
+     * Direction bit for data selectors: if clear, the segment grows up; if set,
+     * the segment grows down.
+     *
+     * Conforming bit for code selectors: if clear, the segment can only be
+     * executed from the ring set in the DPL; if set, the segment can be
+     * executed from any privellege level. */
+    ACCESS_BITS_DC  = 0b00000100,
+    /* Read-write bit. If clear, the segment is readable (code); if set, the
+     * segment is writable (data). */
+    ACCESS_BITS_RW  = 0b00000010,
+    /* Accessed bit (set by CPU) */
+    ACCESS_BITS_A   = 0b00000001
 };
 
 enum flag_bits {
-    FLAG_BITS_RESERVED = 0b00000001,
-    FLAG_BITS_L        = 0b00000010,
-    FLAG_BITS_DB       = 0b00000100,
+    /* Granularity flag (scales segment limit). If clear, the limit is scaled in
+     * 1 byte blocks; if set, the limit is scaled in 4K blocks. */
     FLAG_BITS_G        = 0b00001000,
+    /* Size flag. If clear, the descriptor defines a 16-bit protected mode
+     * segment; if set, the descriptor defines a 32-bit protected mode segment.
+     */
+    FLAG_BITS_DB       = 0b00000100,
+    /* Long-mode code flag. If set, the descriptor defines a 64-bit code
+     * segment; for all other segment types the flag should be clear. */
+    FLAG_BITS_L        = 0b00000010,
+    /* Reserved. */
+    FLAG_BITS_RESERVED = 0b00000001
 };
 
 struct segment_descriptor {
