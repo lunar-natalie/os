@@ -1,4 +1,4 @@
-Operating system project (again).
+Operating system project (again)
 
 # License
 
