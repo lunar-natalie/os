@@ -13,13 +13,15 @@
 
 #include <kernel/tty.h>
 
-char * print_base(unsigned int num, int base)
+char * itoa(uint32_t num, int base)
 {
-    static char digits[] = "0123456789ABCDEF";
-    static char buffer[UINT32_MAX];
-    char *      ptr;
+    static const char digits[] = "0123456789ABCDEF";
+    // Use buffer size 32, as 32 is the maximum number of digits for a 32-bit
+    // integer in base 2, and therefore any base.
+    char              buffer[32];
+    char *            ptr;
 
-    ptr  = &buffer[UINT32_MAX - 1];
+    ptr  = &buffer[31];
     *ptr = '\0';
 
     do {
@@ -68,12 +70,12 @@ int _vprintf(const char * restrict format, va_list * const args)
                     value_arg = -value_arg;
                     tty_put_char('-');
                 }
-                result += tty_write_string(print_base(value_arg, 10));
+                result += tty_write_string(itoa(value_arg, 10));
             }
             /* octal */
             else if (type == 'o') {
                 value_arg = va_arg(*args, unsigned int);
-                result += tty_write_string(print_base(value_arg, 8));
+                result += tty_write_string(itoa(value_arg, 8));
             }
             /* string */
             else if (type == 's') {
@@ -83,7 +85,7 @@ int _vprintf(const char * restrict format, va_list * const args)
             /* hex */
             else if (type == 'x') {
                 value_arg = va_arg(*args, unsigned int);
-                result += tty_write_string(print_base(value_arg, 16));
+                result += tty_write_string(itoa(value_arg, 16));
             }
         }
         else {
