@@ -119,8 +119,8 @@ macro(load_target_platform)
   # Add platform to compile definitions
   string(TOUPPER ${${PROJECT_NAME}_TARGET_ARCH} ARCH_UPPER)
   string(TOUPPER ${${PROJECT_NAME}_TARGET_VENDOR} VENDOR_UPPER)
-  add_compile_definitions(_${ARCH_UPPER}_)
-  add_compile_definitions(_${VENDOR_UPPER}_)
+  add_compile_definitions(_${ARCH_UPPER})
+  add_compile_definitions(_${VENDOR_UPPER})
 endmacro()
 
 # Calls `add_subdirectory` to load platform-specific sources for the current
