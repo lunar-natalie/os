@@ -16,10 +16,11 @@
 char * itoa(uint32_t num, int base)
 {
     static const char digits[] = "0123456789ABCDEF";
+
     // Use buffer size 32, as 32 is the maximum number of digits for a 32-bit
     // integer in base 2, and therefore any base.
-    char              buffer[32];
-    char *            ptr;
+    char   buffer[32];
+    char * ptr;
 
     ptr  = &buffer[31];
     *ptr = '\0';
