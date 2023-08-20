@@ -1,0 +1,18 @@
+{
+  "configurations": [
+    {
+      "name": "Linux",
+      "includePath": [
+        "${workspaceFolder}/**"
+      ],
+      "defines": [],
+      "compilerPath": "/usr/bin/clang",
+      "cStandard": "c11",
+      "cppStandard": "c++11",
+      "intelliSenseMode": "linux-clang-x86",
+      "configurationProvider": "ms-vscode.cmake-tools",
+      "mergeConfigurations": true
+    }
+  ],
+  "version": 4
+}
