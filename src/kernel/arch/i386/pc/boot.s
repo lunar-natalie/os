@@ -8,7 +8,7 @@
  */
 
 /* Multiboot constants */
-.set ALIGN	1 << 0			/* Align loaded modules on page boundaries */
+.set ALIGN,	1 << 0			/* Align loaded modules on page boundaries */
 .set MEMINFO,	1 << 1			/* Provide memory map */
 .set FLAGS,	ALIGN | MEMINFO		/* 'flag' field */
 .set MAGIC,	0x1BADB002		/* Kernel identifier */
