@@ -13,27 +13,34 @@
 
 #include <kernel/error.h>
 
-/* GDT with one null segment, two ring 0 segments, two ring 3 segments, TSS
- * segment (ring 0 segments) */
+/* GDT with one null descriptor, two ring 0 segments, two ring 3 segments, and
+ * the TSS segment. */
 #define GDT_LENGTH 6
-static gdt_entry_t gdt[GDT_LENGTH];
+static gdt_data_t gdt[GDT_LENGTH];
+static gdt_entry_t *
+    gdt_entries[GDT_LENGTH - 1]; /* GDT length minus null descriptor. */
+static gdt_entry_t ring0_code;   /* Kernel code segment. */
+static gdt_entry_t ring0_data;   /* Kernel data segment. */
+static gdt_entry_t ring1_code;   /* Userspace code segment. */
+static gdt_entry_t ring1_data;   /* Userspace data segment. */
+static gdt_entry_t tss_entry;    /* Task state segment. */
 
-static uint16_t task_state[UINT16_MAX];
+const static gdt_data_t GDT_NULL = {};
 
-void encode_gdt_entry(gdt_entry_t * dest, segment_descriptor_t const * source)
+void encode_gdt_entry(gdt_data_t * dest, gdt_entry_t const * source)
 {
     if (source->limit > GDT_MAX_LIMIT) {
         kernel_error("Cannot encode GDT limit larger than 0x%x", GDT_MAX_LIMIT);
     }
 
     /* Limit */
-    const uint64_t limit_value = (uint64_t) source->limit;
+    const uint32_t limit_value = (uint32_t) source->limit;
     dest->limit_low            = limit_value & 0xFFFF;       /* Bits 0-15 */
     dest->limit_high           = (limit_value >> 16) & 0x0F; /* Bits 16-19  */
     /* Base */
     const uint32_t base_value  = (uint32_t) source->base;
     dest->base_low             = base_value & 0xFFFFFF; /* Bits 0-24 */
-    dest->base_high            = (base_value >> 24);    /* Bits 24-31 */
+    dest->base_high            = base_value >> 24;      /* Bits 24-31 */
     /* Access byte */
     dest->access               = source->access;
     /* Flags */
@@ -42,44 +49,56 @@ void encode_gdt_entry(gdt_entry_t * dest, segment_descriptor_t const * source)
 
 void gdt_init(void)
 {
-    segment_descriptor_t desc[GDT_LENGTH - 1];
+    /* Null descriptor */
+    gdt[0] = GDT_NULL;
 
     /* Kernel code segment */
-    desc[0].base   = (uint32_t *) 0;
-    desc[0].limit  = (uint64_t *) 0xFFFFF;
-    desc[0].access = (uint8_t) (ACCESS_BITS_RW | ACCESS_BITS_E | ACCESS_BITS_S
-                                | ACCESS_BITS_P);
-    desc[0].flags  = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
+    ring0_code.base   = (uint32_t *) 0;
+    ring0_code.limit  = (uint32_t *) 0xFFFFF;
+    ring0_code.access = (uint8_t) (ACCESS_BITS_RW | ACCESS_BITS_E
+                                   | ACCESS_BITS_S | ACCESS_BITS_P);
+    ring0_code.flags  = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
+    gdt_entries[0]    = &ring0_code;
+
     /* Kernel data segment */
-    desc[1].base   = (uint32_t *) 0;
-    desc[1].limit  = (uint64_t *) 0xFFFFF;
-    desc[1].access = (uint8_t) (ACCESS_BITS_RW | ACCESS_BITS_S | ACCESS_BITS_P);
-    desc[1].flags  = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
-    /* User code segment */
-    desc[2].base   = (uint32_t *) 0;
-    desc[2].limit  = (uint64_t *) 0xFFFFF;
-    desc[2].access = (uint8_t) (ACCESS_BITS_RW | ACCESS_BITS_E | ACCESS_BITS_S
-                                | ACCESS_BITS_DPL | ACCESS_BITS_P);
-    desc[2].flags  = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
-    /* User data segment */
-    desc[3].base   = (uint32_t *) 0;
-    desc[3].limit  = (uint64_t *) 0xFFFFF;
-    desc[3].access =
+    ring0_data.base  = (uint32_t *) 0;
+    ring0_data.limit = (uint32_t *) 0xFFFFF;
+    ring0_data.access =
+        (uint8_t) (ACCESS_BITS_RW | ACCESS_BITS_S | ACCESS_BITS_P);
+    ring0_data.flags = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
+    gdt_entries[1]   = &ring0_data;
+
+    /* Userspace code segment */
+    ring1_code.base  = (uint32_t *) 0;
+    ring1_code.limit = (uint32_t *) 0xFFFFF;
+    ring1_code.access =
+        (uint8_t) (ACCESS_BITS_RW | ACCESS_BITS_E | ACCESS_BITS_S
+                   | ACCESS_BITS_DPL | ACCESS_BITS_P);
+    ring1_code.flags = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
+    gdt_entries[2]   = &ring1_code;
+
+    /* Userspace data segment */
+    ring1_data.base  = (uint32_t *) 0;
+    ring1_data.limit = (uint32_t *) 0xFFFFF;
+    ring1_data.access =
         (uint8_t) (ACCESS_BITS_S | ACCESS_BITS_DPL | ACCESS_BITS_P);
-    desc[3].flags  = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
+    ring1_data.flags = (uint8_t) (FLAG_BITS_DB | FLAG_BITS_G);
+    gdt_entries[3]   = &ring1_data;
+
     /* Task state segment */
-    desc[4].base   = (uint32_t *) &task_state;
-    desc[4].limit  = (uint64_t *) UINT16_MAX;
-    desc[4].access = (uint8_t) (ACCESS_BITS_A | ACCESS_BITS_E | ACCESS_BITS_P);
-    desc[4].flags  = 0;
+    tss_entry.base  = (uint32_t *) &tss;
+    tss_entry.limit = (uint32_t *) sizeof(tss);
+    tss_entry.access =
+        (uint8_t) (ACCESS_BITS_A | ACCESS_BITS_E | ACCESS_BITS_P);
+    tss_entry.flags = 0;
+    gdt_entries[4]  = &tss_entry;
 
-    /* Null descriptor */
-    gdt[0] = GDT_ENTRY_NULL;
-
-    /* Encode */
-    for (size_t i = 1, j = 0; i < GDT_LENGTH; ++i, ++j) {
-        encode_gdt_entry(&gdt[i], &desc[j]);
+    /* Encode (skip null descriptor) */
+    for (size_t i = 0; i < GDT_LENGTH - 1; ++i) {
+        encode_gdt_entry(&gdt[i + 1], gdt_entries[i]);
     }
 
-    load_gdt(gdt);
+    load_gdt(gdt, GDT_LENGTH - 1);
+
+    // flush_tss();
 }

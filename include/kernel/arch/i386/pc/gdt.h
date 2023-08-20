@@ -12,7 +12,40 @@
 
 #include <stdint.h>
 
-enum access_bits {
+#include <kernel/arch/i386/pc/tss.h>
+
+struct gdt_entry {
+    uint32_t * base;
+    uint32_t * limit;
+    uint8_t    access;
+    uint8_t    flags;
+};
+
+/* High-level representation of GDT entry data. */
+typedef struct gdt_entry gdt_entry_t;
+
+struct gdt_data {
+    /* Limit bits 0-15 */
+    unsigned int limit_low  : 16;
+    /* Base bits 0-15 */
+    unsigned int base_low   : 24;
+    /* Access bits */
+    unsigned int access     : 8;
+    /* Limit bits 16-19  */
+    unsigned int limit_high : 4;
+    /* Only used in software; has no effect on hardware */
+    unsigned int available  : 1;
+    /* Flag bits */
+    unsigned int flags      : 3;
+    /* Base bits 24-31 */
+    unsigned int base_high  : 8;
+} __attribute__((packed));
+
+/* GDT entry data as bit-fields. */
+typedef struct gdt_data gdt_data_t;
+
+/* GDT entry access bits. */
+enum gdt_access_bits {
     /* Present bit. Must be set for any valid segment. */
     ACCESS_BITS_P   = 0b10000000,
     /* Descriptor privellege level (ring 0-3). */
@@ -38,7 +71,8 @@ enum access_bits {
     ACCESS_BITS_A   = 0b00000001
 };
 
-enum flag_bits {
+/* GDT entry flag bits. */
+enum gdt_flag_bits {
     /* Granularity flag (scales segment limit). If clear, the limit is scaled in
      * 1 byte blocks; if set, the limit is scaled in 4K blocks. */
     FLAG_BITS_G        = 0b00001000,
@@ -53,42 +87,20 @@ enum flag_bits {
     FLAG_BITS_RESERVED = 0b00000001
 };
 
-struct segment_descriptor {
-    uint32_t * base;
-    uint64_t * limit;
-    uint8_t    access;
-    uint8_t    flags;
-};
+void encode_gdt_entry(gdt_data_t * dest, gdt_entry_t const * source);
 
-typedef struct segment_descriptor segment_descriptor_t;
-
-/* GDT entry bit-fields. */
-struct gdt_entry {
-    /* Limit bits 0-15 */
-    unsigned int limit_low  : 16;
-    /* Base bits 0-15 */
-    unsigned int base_low   : 24;
-    /* Access bits */
-    unsigned int access     : 8;
-    /* Limit bits 16-19  */
-    unsigned int limit_high : 4;
-    /* Only used in software; has no effect on hardware */
-    unsigned int available  : 1;
-    /* Flag bits */
-    unsigned int flags      : 3;
-    /* Base bits 24-31 */
-    unsigned int base_high  : 8;
-} __attribute__((packed));
-
-typedef struct gdt_entry gdt_entry_t;
-
-void encode_gdt_entry(gdt_entry_t * dest, segment_descriptor_t const * source);
-
-extern void load_gdt(gdt_entry_t * data);
+/**
+ * Loads the GDT into the GDTR register.
+ *
+ * @param offset 32-bit table start address.
+ * @param size 16-bit length of the table in bytes, subtracted by 1. The maximum
+ * GDT size is 65536, whilst the maximum 16-bit value is 65535, hence the need
+ * for the subtraction.
+ */
+extern void load_gdt(gdt_data_t * offset, uint16_t size);
 
 void gdt_init(void);
 
-const static uint64_t *  GDT_MAX_LIMIT  = (uint64_t *) 0xFFFFF;
-const static gdt_entry_t GDT_ENTRY_NULL = {};
+const static uint32_t * GDT_MAX_LIMIT = (uint32_t *) 0xFFFFF;
 
 #endif /* _KERNEL_ARCH_I386_PC_GDT_H */
