@@ -1,7 +1,6 @@
 /*
  * boot.s
- * C runtime entry point and Multiboot v1-compliant kernel bootstrap assembly
- * for i386-pc.
+ * Multiboot v1-compliant kernel bootstrap assembly for i386-pc.
  *
  * Copyright (c) 2023 Natalie Wiggins <islifepeachy@outlook.com>
  *
