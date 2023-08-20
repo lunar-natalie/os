@@ -9,16 +9,17 @@
 #include <stdio.h>
 
 #include <stdarg.h>
+#include <stdint.h>
 
 #include <kernel/tty.h>
 
-char * convert(unsigned int num, int base)
+char * print_base(unsigned int num, int base)
 {
     static char digits[] = "0123456789ABCDEF";
-    static char buffer[255];
+    static char buffer[UINT32_MAX];
     char *      ptr;
 
-    ptr  = &buffer[254];
+    ptr  = &buffer[UINT32_MAX - 1];
     *ptr = '\0';
 
     do {
@@ -67,12 +68,12 @@ int _vprintf(const char * restrict format, va_list * const args)
                     value_arg = -value_arg;
                     tty_put_char('-');
                 }
-                result += tty_write_string(convert(value_arg, 10));
+                result += tty_write_string(print_base(value_arg, 10));
             }
             /* octal */
             else if (type == 'o') {
                 value_arg = va_arg(*args, unsigned int);
-                result += tty_write_string(convert(value_arg, 8));
+                result += tty_write_string(print_base(value_arg, 8));
             }
             /* string */
             else if (type == 's') {
@@ -82,7 +83,7 @@ int _vprintf(const char * restrict format, va_list * const args)
             /* hex */
             else if (type == 'x') {
                 value_arg = va_arg(*args, unsigned int);
-                result += tty_write_string(convert(value_arg, 16));
+                result += tty_write_string(print_base(value_arg, 16));
             }
         }
         else {
