@@ -10,11 +10,16 @@
 .global load_gdt
 .type load_gdt, @function
 load_gdt:
-	movw	-2(%ebp), %ax
-	movw	%ax, gdtr		/* Size */
-	movl	-6(%ebp), %eax
-	movl	%eax, gdtr + 2		/* Offset */
+	mov	-2(%ebp), %ax
+	mov	%ax, gdtr		/* Size (invalid if 0) */
+	cmp	$0, %ax
+	je	1f
+	mov	-6(%ebp), %eax
+	mov	%eax, gdtr + 2		/* Offset */
 	lgdt	gdtr
+	xor	%eax, %eax
+	ret
+1:	mov	$1, %eax
 	ret
 
 gdtr:
