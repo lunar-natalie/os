@@ -7,11 +7,18 @@
  */
 
 .section .text
-.global flush_tss
-.type flush_tss, @function
-flush_tss:
-	/* Fifth 8-byte selector, symbolically OR-ed with 0 to set the RPL
-	 * (requested privilege level) */
-        mov	$((5 * 8) | 0), %ax
+.global load_tss
+.type load_tss, @function
+load_tss:
+	push	%ebp			/* Save stack frame */
+	mov	%esp, %ebp
+
+	/* nth 8-byte descriptor in the GDT, symbolically OR-ed with with the
+	 * RPL. */
+	mov	12(%ebp), %ax		/* GDT index */
+	mulw	8			/* Descriptor size */
+	or	%ax, 8(%ebp)		/* RPL */
         ltr	%ax			/* Load selector into task register */
+
+	pop	%ebp			/* Restore stack frame */
         ret

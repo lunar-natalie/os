@@ -10,8 +10,8 @@
 .global load_gdt
 .type load_gdt, @function
 load_gdt:
-	push	%ebp
-	mov	%esp, %ebp		/* Set frame pointer */
+	push	%ebp			/* Save stack frame */
+	mov	%esp, %ebp
 
 	xor	%eax, %eax
 	mov	12(%ebp), %ax		/* Limit */

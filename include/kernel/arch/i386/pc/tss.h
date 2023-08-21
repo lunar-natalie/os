@@ -53,6 +53,14 @@ typedef struct tss tss_t;
 
 tss_t * tss_init();
 
-extern void flush_tss(void);
+/**
+ * Loads the TSS into the Task Register.
+ *
+ * @param gdt_index Index of the TSS entry in the GDT.
+ * @param rpl Requested privellege level.
+ *
+ * @note Must be called after the GDT has been loaded.
+ */
+extern void load_tss(unsigned int gdt_index, unsigned int rpl);
 
 #endif /* _KERNEL_ARCH_I386_PC_TSS_H */

@@ -15,13 +15,13 @@
 #include <kernel/arch/i386/pc/tss.h>
 
 struct gdt_entry {
-    uint32_t * base;
-    uint32_t * limit;
-    uint8_t    access;
-    uint8_t    flags;
+    uint32_t base;   /* 32-bit linear start address */
+    uint32_t limit;  /* 20-bit maximum addressable unit */
+    uint8_t  access; /* Access byte */
+    uint8_t  flags;  /* Flags byte */
 };
 
-/* High-level representation of GDT entry data. */
+/* High-level representation of a GDT segment descriptor. */
 typedef struct gdt_entry gdt_entry_t;
 
 struct gdt_data {
@@ -41,7 +41,7 @@ struct gdt_data {
     unsigned int base_high  : 8;
 } __attribute__((packed));
 
-/* GDT entry data as bit-fields. */
+/* Real GDT entry data arranged in bit-fields. */
 typedef struct gdt_data gdt_data_t;
 
 /* GDT entry access bits. */
@@ -89,6 +89,10 @@ enum gdt_flag_bits {
     FLAG_BITS_RESERVED = 0b00000001
 };
 
+const static uint32_t GDT_MAX_LIMIT = 0xFFFFF;
+
+void gdt_init(void);
+
 void encode_gdt_entry(gdt_data_t * dest, gdt_entry_t const * source);
 
 /**
@@ -101,9 +105,5 @@ void encode_gdt_entry(gdt_data_t * dest, gdt_entry_t const * source);
  * @return 0 if valid GDT, or 1 if invalid.
  */
 extern int load_gdt(gdt_data_t * base, uint16_t limit);
-
-void gdt_init(void);
-
-const static uint32_t * GDT_MAX_LIMIT = (uint32_t *) 0xFFFFF;
 
 #endif /* _KERNEL_ARCH_I386_PC_GDT_H */
