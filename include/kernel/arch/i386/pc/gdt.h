@@ -47,14 +47,16 @@ typedef struct gdt_data gdt_data_t;
 /* GDT entry access bits. */
 enum gdt_access_bits {
     /* Present bit. Must be set for any valid segment. */
-    ACCESS_BITS_P   = 0b10000000,
+    ACCESS_BITS_P     = 0b10000000,
     /* Descriptor privellege level (ring 0-3). */
-    ACCESS_BITS_DPL = 0b01100000,
+    ACCESS_BITS_DPL_1 = 0b00100000,
+    ACCESS_BITS_DPL_2 = 0b01000000,
+    ACCESS_BITS_DPL_3 = 0b01100000,
     /* Descriptor type bit. Clear if system segment, set if code or data
      * segment. */
-    ACCESS_BITS_S   = 0b00010000,
+    ACCESS_BITS_S     = 0b00010000,
     /* Executable bit. */
-    ACCESS_BITS_E   = 0b00001000,
+    ACCESS_BITS_E     = 0b00001000,
     /* Direction/conforming bit.
      *
      * Direction bit for data selectors: if clear, the segment grows up; if set,
@@ -63,12 +65,12 @@ enum gdt_access_bits {
      * Conforming bit for code selectors: if clear, the segment can only be
      * executed from the ring set in the DPL; if set, the segment can be
      * executed from any privellege level. */
-    ACCESS_BITS_DC  = 0b00000100,
+    ACCESS_BITS_DC    = 0b00000100,
     /* Read-write bit. If clear, the segment is readable (code); if set, the
      * segment is writable (data). */
-    ACCESS_BITS_RW  = 0b00000010,
+    ACCESS_BITS_RW    = 0b00000010,
     /* Accessed bit (set by CPU) */
-    ACCESS_BITS_A   = 0b00000001
+    ACCESS_BITS_A     = 0b00000001
 };
 
 /* GDT entry flag bits. */
@@ -92,12 +94,13 @@ void encode_gdt_entry(gdt_data_t * dest, gdt_entry_t const * source);
 /**
  * Loads the GDT into the GDTR register.
  *
- * @param offset 32-bit table start address.
- * @param size 16-bit length of the table in bytes, subtracted by 1. The maximum
- * GDT size is 65536, whilst the maximum 16-bit value is 65535, hence the need
- * for the subtraction.
+ * @param base 32-bit table start address.
+ * @param limit 16-bit length of the table in bytes, subtracted by 1. The
+ * maximum GDT size is 65536, whilst the maximum 16-bit value is 65535, hence
+ * the need for the subtraction.
+ * @return 0 if valid GDT, or 1 if invalid.
  */
-extern void load_gdt(gdt_data_t * offset, uint16_t size);
+extern int load_gdt(gdt_data_t * base, uint16_t limit);
 
 void gdt_init(void);
 

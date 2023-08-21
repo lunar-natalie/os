@@ -21,9 +21,10 @@
 .long FLAGS
 .long CHECKSUM
 
-/* Top-down 16K x86 stack */
+/* Top-down 16K stack.
+ * Aligned to 16 bits in the System V ABI. */
 .section .bss
-.align 16				/* Aligned to 16 bits (System V ABI) */
+.align 16
 stack_bottom:
 .skip 16384
 stack_top:
@@ -33,34 +34,39 @@ stack_top:
 .global _start
 .type _start, @function
 _start:
-	/*
-	 * Loaded in 32-bit protected mode.
+	/* Loaded in 32-bit protected mode.
 	 * Kernel now has full CPU control, no runtime utilities are implemented
-	 * and GDT/paging is yet to be initialized.
-	 */
+	 * and GDT/paging is yet to be initialized. */
 
 	/* Load stack pointer */
 	mov     $stack_top, %esp
 
-	/*
-	 * Enter high level C kernel.
+	/* Save stack segment and pointer for TSS */
+	mov	%ss, _boot_ss0
+	mov	%esp, _boot_esp0
+
+	/* Enter high level C kernel.
 	 *
-	 * The stack must be 16-bit aligned at the time of this call, according
-	 * to the System V ABI. This state is preserved as the stack is
-	 * initially empty and 16-bit aligned.
-	 */
+	 * The stack must be 16-bit aligned at the time of this call using the
+	 * System V ABI. This state is preserved as the stack is initially empty
+	 * and 16-bit aligned. */
 	call    kernel_main
 
+/* Set _start symbol size for debugging/call tracing */
+.size _start, . - _start
+
 _end:
-    /* Stop execution */
-    cli
+	/* Stop execution */
+	cli
 1:	hlt				/* Halt on NMI */
 	jmp     1b
 
 .global kernel_exit
 .type kernel_exit, @function
 kernel_exit:
-    jmp     _end
+	jmp     _end
 
-/* Set _start symbol size for debugging/call tracing */
-.size _start, . - _start
+.global _boot_ss0
+.global _boot_esp0
+_boot_ss0:	.long 0
+_boot_esp0:	.long 0

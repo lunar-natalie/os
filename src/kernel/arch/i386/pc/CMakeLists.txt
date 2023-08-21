@@ -6,6 +6,7 @@ update_parent(TARGET Kernel
     "gdt.c"
     "gdt.s"
     "main.c"
+    "tss.c"
     "tss.s"
     "vga.c"
   LINKER_SCRIPT "link.ld"

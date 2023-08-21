@@ -10,18 +10,28 @@
 .global load_gdt
 .type load_gdt, @function
 load_gdt:
-	mov	-2(%ebp), %ax
-	mov	%ax, gdtr		/* Size (invalid if 0) */
-	cmp	$0, %ax
-	je	1f
-	mov	-6(%ebp), %eax
-	mov	%eax, gdtr + 2		/* Offset */
-	lgdt	gdtr
+	push	%ebp
+	mov	%esp, %ebp		/* Set frame pointer */
+
 	xor	%eax, %eax
-	ret
+	mov	12(%ebp), %ax		/* Limit */
+	mov	%ax, gdtr
+
+	cmp	$0, %ax			/* (invalid if 0) */
+	je	1f
+
+	mov	8(%ebp), %eax		/* Base */
+	mov	%eax, gdtr + 2
+	lgdt	gdtr
+
+	xor	%eax, %eax
+	jmp	2f
+
 1:	mov	$1, %eax
+
+2:	pop	%ebp			/* Restore stack frame */
 	ret
 
 gdtr:
-.word 0         /* Size */
-.long 0         /* Offset */
+.word 0         /* Limit */
+.long 0         /* Base */

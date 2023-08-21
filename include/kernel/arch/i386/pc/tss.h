@@ -12,6 +12,8 @@
 
 #include <stdint.h>
 
+#include <kernel/arch/i386/pc/gdt.h>
+
 /* Task State Segment. */
 struct tss {
     uint32_t prev_tss; /* Previous TSS. With hardware task switching, these form
@@ -49,8 +51,8 @@ struct tss {
 
 typedef struct tss tss_t;
 
-extern void flush_tss(void);
+tss_t * tss_init();
 
-static tss_t tss;
+extern void flush_tss(void);
 
 #endif /* _KERNEL_ARCH_I386_PC_TSS_H */
