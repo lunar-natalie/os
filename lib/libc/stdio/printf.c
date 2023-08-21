@@ -13,16 +13,19 @@
 
 #include <kernel/tty.h>
 
-char * itoa(uint32_t num, int base)
+#define UINT_BITS sizeof(unsigned int) * sizeof(unsigned int)
+
+char * itoa(unsigned int num, int base)
 {
     static const char digits[] = "0123456789ABCDEF";
 
-    // Use buffer size 32, as 32 is the maximum number of digits for a 32-bit
-    // integer in base 2, and therefore any base.
-    char   buffer[32];
+    // The maximum number of digits for an integer in base 2 is equal to the
+    // number of bits of the integer type, and therefore the same goes for every
+    // other base.
+    char   buffer[UINT_BITS];
     char * ptr;
 
-    ptr  = &buffer[31];
+    ptr  = &buffer[UINT_BITS - 1];
     *ptr = '\0';
 
     do {
