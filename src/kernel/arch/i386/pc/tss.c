@@ -13,13 +13,13 @@
 
 static tss_t tss;
 
-extern uint32_t   _boot_ss0;
-extern uint32_t * _boot_esp0;
+extern uint32_t _boot_ss0;
+extern uint32_t _boot_esp0;
 
 tss_t * tss_init()
 {
-    memset(&tss, 0, sizeof(tss));     /* Clear data */
-    tss.ss0  = _boot_ss0;             /* Kernel stack segment */
-    tss.esp0 = (uint32_t) _boot_esp0; /* Kernel stack pointer */
+    memset(&tss, 0, sizeof(tss)); /* Clear data */
+    tss.ss0  = _boot_ss0;         /* Kernel stack segment */
+    tss.esp0 = _boot_esp0;        /* Kernel stack pointer */
     return &tss;
 }
