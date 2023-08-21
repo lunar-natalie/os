@@ -33,36 +33,35 @@ void gdt_init(tss_t const * ring0_tss)
     gdt[0] = GDT_NULL;
 
     /* Kernel code segment */
-    ring0_code.base   = 0;
-    ring0_code.limit  = 0xFFFFF;
-    ring0_code.access = (uint8_t) (ACCESS_BITS_P | ACCESS_BITS_S | ACCESS_BITS_E
-                                   | ACCESS_BITS_RW);
-    ring0_code.flags  = (uint8_t) (FLAG_BITS_G | FLAG_BITS_DB);
-    gdt_entries[0]    = &ring0_code;
+    ring0_code.base  = 0;
+    ring0_code.limit = 0xFFFFF;
+    ring0_code.access =
+        (uint8_t) (GDT_ACCESS_P | GDT_ACCESS_S | GDT_ACCESS_E | GDT_ACCESS_RW);
+    ring0_code.flags = (uint8_t) (GDT_FLAG_G | GDT_FLAG_DB);
+    gdt_entries[0]   = &ring0_code;
 
     /* Kernel data segment */
-    ring0_data.base  = 0;
-    ring0_data.limit = 0xFFFFF;
-    ring0_data.access =
-        (uint8_t) (ACCESS_BITS_P | ACCESS_BITS_S | ACCESS_BITS_RW);
-    ring0_data.flags = (uint8_t) (FLAG_BITS_G | FLAG_BITS_DB);
-    gdt_entries[1]   = &ring0_data;
+    ring0_data.base   = 0;
+    ring0_data.limit  = 0xFFFFF;
+    ring0_data.access = (uint8_t) (GDT_ACCESS_P | GDT_ACCESS_S | GDT_ACCESS_RW);
+    ring0_data.flags  = (uint8_t) (GDT_FLAG_G | GDT_FLAG_DB);
+    gdt_entries[1]    = &ring0_data;
 
     /* Userspace code segment */
     ring3_code.base  = 0;
     ring3_code.limit = 0xFFFFF;
     ring3_code.access =
-        (uint8_t) (ACCESS_BITS_P | ACCESS_BITS_DPL_3 | ACCESS_BITS_S
-                   | ACCESS_BITS_E | ACCESS_BITS_RW);
-    ring3_code.flags = (uint8_t) (FLAG_BITS_G | FLAG_BITS_DB);
+        (uint8_t) (GDT_ACCESS_P | GDT_ACCESS_DPL_3 | GDT_ACCESS_S | GDT_ACCESS_E
+                   | GDT_ACCESS_RW);
+    ring3_code.flags = (uint8_t) (GDT_FLAG_G | GDT_FLAG_DB);
     gdt_entries[2]   = &ring3_code;
 
     /* Userspace data segment */
     ring3_data.base   = 0;
     ring3_data.limit  = 0xFFFFF;
-    ring3_data.access = (uint8_t) (ACCESS_BITS_P | ACCESS_BITS_DPL_3
-                                   | ACCESS_BITS_S | ACCESS_BITS_RW);
-    ring3_data.flags  = (uint8_t) (FLAG_BITS_G | FLAG_BITS_DB);
+    ring3_data.access = (uint8_t) (GDT_ACCESS_P | GDT_ACCESS_DPL_3
+                                   | GDT_ACCESS_S | GDT_ACCESS_RW);
+    ring3_data.flags  = (uint8_t) (GDT_FLAG_G | GDT_FLAG_DB);
     gdt_entries[3]    = &ring3_data;
 
     /* Task state segment
@@ -71,9 +70,9 @@ void gdt_init(tss_t const * ring0_tss)
     ring0_tss_entry.base  = (uint32_t) ring0_tss;
     ring0_tss_entry.limit = sizeof(*ring0_tss);
     ring0_tss_entry.access =
-        (uint8_t) (ACCESS_BITS_P   /* Required */
-                   | ACCESS_BITS_E /* Indicates 32-bit */
-                   | ACCESS_BITS_A /* System segment, therefore indicates TSS */
+        (uint8_t) (GDT_ACCESS_P   /* Required */
+                   | GDT_ACCESS_E /* Indicates 32-bit */
+                   | GDT_ACCESS_A /* System segment, therefore indicates TSS */
         );
     ring0_tss_entry.flags = 0;
     gdt_entries[4]        = &ring0_tss_entry;

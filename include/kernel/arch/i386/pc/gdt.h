@@ -25,19 +25,19 @@ struct gdt_entry {
 typedef struct gdt_entry gdt_entry_t;
 
 struct gdt_data {
-    /* Limit bits 0-15 */
+    /* Limit bits 0-15. */
     unsigned int limit_low  : 16;
-    /* Base bits 0-15 */
+    /* Base bits 0-15. */
     unsigned int base_low   : 24;
-    /* Access bits */
+    /* Access bits. */
     unsigned int access     : 8;
-    /* Limit bits 16-19  */
+    /* Limit bits 16-19.  */
     unsigned int limit_high : 4;
-    /* Only used in software; has no effect on hardware */
-    unsigned int available  : 1;
-    /* Flag bits */
+    /* Only used in software; has no effect on hardware. */
+    unsigned int reserved   : 1;
+    /* Flag bits. */
     unsigned int flags      : 3;
-    /* Base bits 24-31 */
+    /* Base bits 24-31. */
     unsigned int base_high  : 8;
 } __attribute__((packed));
 
@@ -47,16 +47,16 @@ typedef struct gdt_data gdt_data_t;
 /* GDT entry access bits. */
 enum gdt_access_bits {
     /* Present bit. Must be set for any valid segment. */
-    ACCESS_BITS_P     = 0b10000000,
+    GDT_ACCESS_P     = 0b10000000,
     /* Descriptor privellege level (ring 0-3). */
-    ACCESS_BITS_DPL_1 = 0b00100000,
-    ACCESS_BITS_DPL_2 = 0b01000000,
-    ACCESS_BITS_DPL_3 = 0b01100000,
+    GDT_ACCESS_DPL_1 = 0b00100000,
+    GDT_ACCESS_DPL_2 = 0b01000000,
+    GDT_ACCESS_DPL_3 = 0b01100000,
     /* Descriptor type bit. Clear if system segment, set if code or data
      * segment. */
-    ACCESS_BITS_S     = 0b00010000,
+    GDT_ACCESS_S     = 0b00010000,
     /* Executable bit. */
-    ACCESS_BITS_E     = 0b00001000,
+    GDT_ACCESS_E     = 0b00001000,
     /* Direction/conforming bit.
      *
      * Direction bit for data selectors: if clear, the segment grows up; if set,
@@ -65,28 +65,26 @@ enum gdt_access_bits {
      * Conforming bit for code selectors: if clear, the segment can only be
      * executed from the ring set in the DPL; if set, the segment can be
      * executed from any privellege level. */
-    ACCESS_BITS_DC    = 0b00000100,
+    GDT_ACCESS_DC    = 0b00000100,
     /* Read-write bit. If clear, the segment is readable (code); if set, the
      * segment is writable (data). */
-    ACCESS_BITS_RW    = 0b00000010,
+    GDT_ACCESS_RW    = 0b00000010,
     /* Accessed bit (set by CPU) */
-    ACCESS_BITS_A     = 0b00000001
+    GDT_ACCESS_A     = 0b00000001
 };
 
 /* GDT entry flag bits. */
 enum gdt_flag_bits {
     /* Granularity flag (scales segment limit). If clear, the limit is scaled in
      * 1 byte blocks; if set, the limit is scaled in 4K blocks. */
-    FLAG_BITS_G        = 0b00001000,
+    GDT_FLAG_G  = 0b00001000,
     /* Size flag. If clear, the descriptor defines a 16-bit protected mode
      * segment; if set, the descriptor defines a 32-bit protected mode segment.
      */
-    FLAG_BITS_DB       = 0b00000100,
+    GDT_FLAG_DB = 0b00000100,
     /* Long-mode code flag. If set, the descriptor defines a 64-bit code
      * segment; for all other segment types the flag should be clear. */
-    FLAG_BITS_L        = 0b00000010,
-    /* Reserved. */
-    FLAG_BITS_RESERVED = 0b00000001
+    GDT_FLAG_L  = 0b00000010,
 };
 
 #define GDT_LENGTH 6

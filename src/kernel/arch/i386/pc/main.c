@@ -23,7 +23,7 @@ void kernel_main(void)
 
     ring0_tss = tss_init_ring0();     /* Initialize kernel TSS */
     gdt_init(ring0_tss);              /* Initialize GDT */
-    load_tss(GDT_RING0_TSS_INDEX, 0); /* Load kernel TSS*/
+    load_tss(GDT_RING0_TSS_INDEX, 0); /* Load kernel TSS */
 
     printf("ready\n");
 }
