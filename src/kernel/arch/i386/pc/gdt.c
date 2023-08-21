@@ -68,7 +68,7 @@ void gdt_init(tss_t const * ring0_tss)
      * Note: the functions of some bits in the TSS descriptor differ
      * from that of the other GDT entry types. */
     ring0_tss_entry.base  = (uint32_t) ring0_tss;
-    ring0_tss_entry.limit = sizeof(*ring0_tss);
+    ring0_tss_entry.limit = sizeof(tss_t);
     ring0_tss_entry.access =
         (uint8_t) (GDT_ACCESS_P   /* Required */
                    | GDT_ACCESS_E /* Indicates 32-bit */
