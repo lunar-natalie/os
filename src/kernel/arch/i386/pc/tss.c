@@ -11,15 +11,15 @@
 #include <stdint.h>
 #include <string.h>
 
-static tss_t tss;
+static tss_t ring0_tss;
 
 extern uint32_t _boot_ss0;
 extern uint32_t _boot_esp0;
 
-tss_t * tss_init()
+tss_t * tss_init_ring0()
 {
-    memset(&tss, 0, sizeof(tss)); /* Clear data */
-    tss.ss0  = _boot_ss0;         /* Kernel stack segment */
-    tss.esp0 = _boot_esp0;        /* Kernel stack pointer */
-    return &tss;
+    memset(&ring0_tss, 0, sizeof(tss_t)); /* Clear data */
+    ring0_tss.ss0  = _boot_ss0;           /* Kernel stack segment */
+    ring0_tss.esp0 = _boot_esp0;          /* Kernel stack pointer */
+    return &ring0_tss;
 }

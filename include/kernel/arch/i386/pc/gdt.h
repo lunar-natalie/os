@@ -89,9 +89,12 @@ enum gdt_flag_bits {
     FLAG_BITS_RESERVED = 0b00000001
 };
 
-const static uint32_t GDT_MAX_LIMIT = 0xFFFFF;
+#define GDT_LENGTH 6
+const static uint32_t     GDT_MAX_LIMIT       = 0xFFFFF;
+const static unsigned int GDT_RING0_TSS_INDEX = GDT_LENGTH - 1;
+const static unsigned int GDT_TSS_RPL         = 0;
 
-void gdt_init(void);
+void gdt_init(tss_t const * ring0_tss);
 
 void encode_gdt_entry(gdt_data_t * dest, gdt_entry_t const * source);
 
