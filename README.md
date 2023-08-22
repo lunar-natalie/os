@@ -1,4 +1,65 @@
-Operating system project (again)
+Operating system
+
+# Supported platforms
+
+- i386-pc
+
+# Build
+
+## Requirements
+
+- CMake >= 3.25.1
+- CMake backend
+- GCC cross-compiler >= 8.1.0
+- Binutils (cross-target)
+
+### Optional
+
+- clang-format >= 14.0.6
+- clang-tidy
+
+### Bootable image creation
+
+- grub-mkrescue
+- xorriso
+- mtools
+
+## CMake: Configure
+
+Replace:
+
+- `<TARGET_TRIPLET>` with the target platform `<MACH>-<ARCH>-<VENDOR>`.
+- `<BUILD_TYPE>` with the desired build type (`Debug` or `Release`)
+
+### Without bootable image
+
+```sh
+cmake -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -Dos_TARGET_TRIPLET=<TARGET_TRIPLET> -Dos_ENABLE_TESTS=ON -Bbuild
+```
+
+### With bootable image
+
+```sh
+cmake -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -Dos_TARGET_TRIPLET=<TARGET_TRIPLET> -Dos_ENABLE_TESTS=ON -Dos_ENABLE_IMAGE=ON -Bbuild
+```
+
+## CMake: Build
+
+```sh
+cmake --build build
+```
+
+# Testing the bootable image
+
+Requires a QEMU executable with support for the target architecture.
+
+Replace:
+
+- `<ARCH>` with the target architecture
+
+```sh
+qemu-system-<ARCH> -cdrom build/os.iso
+```
 
 # License
 
