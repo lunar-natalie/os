@@ -61,7 +61,7 @@ cmake --build build
 
 Replace:
 
-- `<ARCH>` with the target architecture
+- `<ARCH>` with the target architecture (i386 for the x86 machine)
 
 ```sh
 qemu-system-<ARCH> -cdrom build/os.iso
