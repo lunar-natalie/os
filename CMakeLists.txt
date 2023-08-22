@@ -7,7 +7,7 @@ project(os
   LANGUAGES C ASM-ATT)
 
 # Options
-set(os_TARGET_TRIPLET "" CACHE STRING "Target platform triplet. Defaults to the platform reported by the C compiler.")
+set(os_TARGET_TRIPLET "" CACHE STRING "Target platform triplet (<MACH>-<VENDOR>-<SYS>-<ENV>). Defaults to the platform reported by the C compiler.")
 option(os_ENABLE_TESTS "Enable unit tests" ON)
 option(os_ENABLE_IMAGE "Enable bootable image build" ON)
 option(os_ENABLE_CLANG_TIDY "Enable clang-tidy for processing source files" ON)
