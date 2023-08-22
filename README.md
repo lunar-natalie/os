@@ -28,7 +28,7 @@ Operating system
 
 Replace:
 
-- `<TARGET_TRIPLET>` with the target platform `<MACH>-<ARCH>-<VENDOR>`.
+- `<TARGET_TRIPLET>` with the target platform `<MACH>-<ARCH>-<VENDOR>`
 - `<BUILD_TYPE>` with the desired build type (`Debug` or `Release`)
 
 ### Without bootable image
