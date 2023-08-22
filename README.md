@@ -35,16 +35,13 @@ Replace:
 - `<TARGET_TRIPLET>` with the target platform `<MACH>-<ARCH>-<VENDOR>`
 - `<BUILD_TYPE>` with the desired build type (`Debug` or `Release`)
 
-### Without bootable image
+Additional options:
+
+- `-Dos_ENABLE_TESTS=ON` - enable tests
+- `-Dos_ENABLE_IMAGE=ON` - enable bootable image creation
 
 ```sh
-cmake -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -Dos_TARGET_TRIPLET=<TARGET_TRIPLET> -Dos_ENABLE_TESTS=ON -Bbuild
-```
-
-### With bootable image
-
-```sh
-cmake -DCMAKE_BUILD_TYPE:STRING=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -Dos_TARGET_TRIPLET=<TARGET_TRIPLET> -Dos_ENABLE_TESTS=ON -Dos_ENABLE_IMAGE=ON -Bbuild
+cmake -DCMAKE_BUILD_TYPE:STRING=<BUILD_TYPE> -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -Dos_TARGET_TRIPLET=<TARGET_TRIPLET> -Bbuild
 ```
 
 ## CMake: Build
