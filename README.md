@@ -11,7 +11,7 @@ Operating system
 - CMake >= 3.25.1
 - CMake backend
 - GCC cross-compiler >= 8.1.0
-- Binutils (cross-target)
+- Binutils cross-toolchain
 
 ### Optional
 
