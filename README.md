@@ -18,6 +18,10 @@ Operating system
 - clang-format >= 14.0.6
 - clang-tidy
 
+### Tests
+
+- grub-file
+
 ### Bootable image creation
 
 - grub-mkrescue
@@ -51,7 +55,12 @@ cmake --build build
 
 # Testing the bootable image
 
-Requires a QEMU executable with support for the target architecture.
+## Requirements
+
+- QEMU executable for the target architecture
+- GRUB PC/BIOS modules
+
+## Command line
 
 Replace:
 
