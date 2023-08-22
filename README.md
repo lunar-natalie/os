@@ -20,11 +20,11 @@ Operating system
 
 ### Tests
 
-- grub-file
+- grub-file (GRUB2)
 
 ### Bootable image creation
 
-- grub-mkrescue
+- grub-mkrescue (GRUB2)
 - xorriso
 - mtools
 
