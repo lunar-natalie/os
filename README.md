@@ -2,7 +2,7 @@ Operating system
 
 # Supported platforms
 
-- i386-pc
+- `ix86-pc-none-elf` (i386, i486, i586)
 
 # Build
 
@@ -32,7 +32,7 @@ Operating system
 
 Replace:
 
-- `<TARGET_TRIPLET>` with the target platform `<MACH>-<ARCH>-<VENDOR>`
+- `<TARGET_TRIPLET>` with the target platform `<MACH>-<VENDOR>-<SYS>-<ENV>`
 - `<BUILD_TYPE>` with the desired build type (`Debug` or `Release`)
 
 Additional options:
@@ -41,7 +41,7 @@ Additional options:
 - `-Dos_ENABLE_IMAGE=ON` - enable bootable image creation
 
 ```sh
-cmake -DCMAKE_BUILD_TYPE:STRING=<BUILD_TYPE> -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -Dos_TARGET_TRIPLET=<TARGET_TRIPLET> -Bbuild
+cmake -DCMAKE_BUILD_TYPE:STRING=<BUILD_TYPE> -Dos_TARGET_TRIPLET=<TARGET_TRIPLET> -Bbuild
 ```
 
 ## CMake: Build
