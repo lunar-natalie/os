@@ -14,6 +14,10 @@
 
 #include <kernel/arch/i386/pc/tss.h>
 
+#define GDT_LENGTH          6
+#define GDT_MAX_LIMIT       0xFFFFF
+#define GDT_RING0_TSS_INDEX GDT_LENGTH - 1
+
 struct gdt_entry {
     uint32_t base;   /* 32-bit linear start address */
     uint32_t limit;  /* 20-bit maximum addressable unit */
@@ -86,11 +90,6 @@ enum gdt_flag_bits {
      * segment; for all other segment types the flag should be clear. */
     GDT_FLAG_L  = 0b00000010,
 };
-
-#define GDT_LENGTH 6
-const static uint32_t     GDT_MAX_LIMIT       = 0xFFFFF;
-const static unsigned int GDT_RING0_TSS_INDEX = GDT_LENGTH - 1;
-const static unsigned int GDT_TSS_RPL         = 0;
 
 void gdt_init(tss_t const * ring0_tss);
 

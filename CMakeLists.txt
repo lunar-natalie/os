@@ -53,7 +53,7 @@ else()
 endif()
 
 # Set up platform environment
-set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED True)
 load_target_platform()
 

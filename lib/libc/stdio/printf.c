@@ -13,27 +13,31 @@
 
 #include <kernel/tty.h>
 
+/* The maximum number of digits for an unsigned integer in base 2 is equal
+ * to the number of bits of the unsigned integer type, and
+ * therefore the same goes for every other base. */
 #define UINT_BITS sizeof(unsigned int) * sizeof(unsigned int)
 
-char * itoa(unsigned int num, int base)
+unsigned int
+itoa(char * buffer, unsigned int length, unsigned int num, int base)
 {
-    static const char digits[] = "0123456789ABCDEF";
+    static const char digits[] = "0123456789ABCDEF"; /* Representation digits */
+    char *            ptr; /* Pointer to the current character in the buffer */
 
-    // The maximum number of digits for an integer in base 2 is equal to the
-    // number of bits of the integer type, and therefore the same goes for every
-    // other base.
-    char   buffer[UINT_BITS];
-    char * ptr;
-
-    ptr  = &buffer[UINT_BITS - 1];
+    /* Write null terminator. */
+    ptr  = &buffer[length - 1];
     *ptr = '\0';
 
     do {
+        /* Set output char to the digit char indexed by the remainder of
+         * dividing the digit by the base. */
         *--ptr = digits[num % base];
+        /* Divide by base to get to the next digit until we've got all the
+         * digits. */
         num /= base;
     } while (num != 0);
 
-    return ptr;
+    return buffer - ptr; /* Number of digits written */
 }
 
 int printf(const char * restrict format, ...)
@@ -52,11 +56,11 @@ int printf(const char * restrict format, ...)
 
 int _vprintf(const char * restrict format, va_list * const args)
 {
-    int result = 0;
-
+    int    result = 0;
     char   type;
     int    value_arg;
     char * string_arg;
+    char   output_buffer[UINT_BITS];
 
     while (*format != '\0') {
         if (*format == '%') {
@@ -74,12 +78,14 @@ int _vprintf(const char * restrict format, va_list * const args)
                     value_arg = -value_arg;
                     tty_put_char('-');
                 }
-                result += tty_write_string(itoa(value_arg, 10));
+                itoa(output_buffer, UINT_BITS, value_arg, 10);
+                result += tty_write_string(output_buffer);
             }
             /* octal */
             else if (type == 'o') {
                 value_arg = va_arg(*args, unsigned int);
-                result += tty_write_string(itoa(value_arg, 8));
+                itoa(output_buffer, UINT_BITS, value_arg, 8);
+                result += tty_write_string(output_buffer);
             }
             /* string */
             else if (type == 's') {
@@ -89,7 +95,8 @@ int _vprintf(const char * restrict format, va_list * const args)
             /* hex */
             else if (type == 'x') {
                 value_arg = va_arg(*args, unsigned int);
-                result += tty_write_string(itoa(value_arg, 16));
+                itoa(output_buffer, UINT_BITS, value_arg, 16);
+                result += tty_write_string(output_buffer);
             }
         }
         else {

@@ -13,6 +13,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#define VGA_WIDTH  80
+#define VGA_HEIGHT 25
+
 struct vga {
     size_t     row;
     size_t     column;
@@ -21,10 +24,6 @@ struct vga {
 };
 
 typedef struct vga vga_t;
-
-static const uint16_t * VGA_BUFFER = (uint16_t *) 0xB8000;
-static const size_t     VGA_WIDTH  = 80;
-static const size_t     VGA_HEIGHT = 25;
 
 /* Hardware text mode color constants. */
 enum vga_color {
@@ -72,7 +71,7 @@ void vga_put_char(vga_t * vga, char c);
 
 void vga_scroll(vga_t * vga);
 
-void vga_write(vga_t * vga, const char * s, size_t size);
+void vga_write(vga_t * vga, const char * s, size_t length);
 
 size_t vga_write_string(vga_t * vga, const char * s);
 

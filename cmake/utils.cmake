@@ -83,20 +83,14 @@ macro(load_target_platform)
     set(${PROJECT_NAME}_TARGET_TOOLCHAIN_PREFIX
       "${${PROJECT_NAME}_TARGET_MACH}-${${PROJECT_NAME}_TARGET_ENV}")
 
-    # Check if Clang is available for cross-compilation
-    if(NOT(CMAKE_C_COMPILER_ID STREQUAL "Clang"))
-      # Clang unavailable, find (G)CC
-      find_program(CMAKE_C_COMPILER
-        NAMES
-          ${${PROJECT_NAME}_TARGET_TOOLCHAIN_PREFIX}-cc
-          ${${PROJECT_NAME}_TARGET_TOOLCHAIN_PREFIX}-gcc
-        REQUIRED)
-      message("-- Using C cross-compiler: ${CMAKE_C_COMPILER}")
-    else()
-      # Add target platform to compile options
-      add_compile_options(
-        $<$<COMPILE_LANGUAGE:C>:--target=${${PROJECT_NAME}_TARGET_TRIPLET}>)
-    endif()
+    # Force GCC for target-specific target runtime objects
+    find_program(C_COMPILER
+    NAMES
+      ${${PROJECT_NAME}_TARGET_TOOLCHAIN_PREFIX}-cc
+      ${${PROJECT_NAME}_TARGET_TOOLCHAIN_PREFIX}-gcc
+    REQUIRED)
+    set(CMAKE_C_COMPILER ${C_COMPILER})
+    message("-- Using C compiler: ${CMAKE_C_COMPILER}")
 
     # Find AS
     find_program(ASM_ATT_COMPILER

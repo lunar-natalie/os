@@ -14,18 +14,19 @@
 #include <kernel/arch/i386/pc/tss.h>
 #include <kernel/error.h>
 
+static const gdt_data_t GDT_NULL = {};
+
 /* GDT with one null descriptor, two ring 0 segments, two ring 3 segments, and
  * the TSS segment. */
-static gdt_data_t       gdt[GDT_LENGTH];
+static gdt_data_t    gdt[GDT_LENGTH];
 /* Array of pointers to the filled GDT entries. Size is the full GDT length
  * minus the null descriptor. */
-static gdt_entry_t *    gdt_entries[GDT_LENGTH - 1];
-static gdt_entry_t      ring0_code;      /* Kernel code segment. */
-static gdt_entry_t      ring0_data;      /* Kernel data segment. */
-static gdt_entry_t      ring3_code;      /* Userspace code segment. */
-static gdt_entry_t      ring3_data;      /* Userspace data segment. */
-static gdt_entry_t      ring0_tss_entry; /* Task state segment. */
-const static gdt_data_t GDT_NULL = {};
+static gdt_entry_t * gdt_entries[GDT_LENGTH - 1];
+static gdt_entry_t   ring0_code;      /* Kernel code segment. */
+static gdt_entry_t   ring0_data;      /* Kernel data segment. */
+static gdt_entry_t   ring3_code;      /* Userspace code segment. */
+static gdt_entry_t   ring3_data;      /* Userspace data segment. */
+static gdt_entry_t   ring0_tss_entry; /* Task state segment. */
 
 void gdt_init(tss_t const * ring0_tss)
 {
@@ -82,6 +83,7 @@ void gdt_init(tss_t const * ring0_tss)
         encode_gdt_entry(&gdt[i + 1], gdt_entries[i]);
     }
 
+    /* Load into CPU */
     if (load_gdt(gdt, GDT_LENGTH - 1) != 0) {
         kernel_error("Failed to load GDT\n");
     }
