@@ -5,6 +5,7 @@ AccessModifierOffset: -4
 AlignConsecutiveAssignments: AcrossComments
 AlignConsecutiveBitFields: AcrossComments
 AlignConsecutiveDeclarations: AcrossComments
+AlignConsecutiveMacros: AcrossComments
 AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
 BinPackArguments: false
