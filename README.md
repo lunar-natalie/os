@@ -55,7 +55,7 @@ cmake --build build
 ## Requirements
 
 - QEMU executable for the target architecture
-- GRUB PC/BIOS modules
+- GRUB2 PC/BIOS modules
 
 ## Command line
 
