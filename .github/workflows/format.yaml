@@ -1,0 +1,61 @@
+# GitHub Format workflow.
+# Formats code after each push.
+name: Format
+
+on:
+  push:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    container:
+      image: kevincharm/i686-elf-gcc-toolchain
+      env:
+        DOWNLOAD_GCC: gcc-8.1.0
+    steps:
+      - name: Cache dependencies
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: ninja-build clang-format
+          version: 1.0
+          execute_install_scripts: true
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Update credentials
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Configure and format
+        uses: threeal/cmake-action@latest
+        with:
+          args: -DCMAKE_BUILD_TYPE:STRING=Debug -DIsoPunk_BUILD_GAME:BOOL=OFF -DIsoPunk_ENABLE_LIBS:BOOL=OFF
+          generator: Ninja
+          cxx-compiler: clang++
+          run-build: true
+          build-args: --target ClangFormat
+
+      - name: Ammend commit and push changes
+        shell: bash
+        run: |
+          SRCDIRS=(include lib src tests)
+          DIFF=0
+          for d in ${SRCDIRS[@]}; do
+            if [[ -n "$(git diff "$d")" ]]; then
+              DIFF=1
+            fi
+          done
+          if [[ "$DIFF" == 0 ]]; then
+            exit
+          fi
+          git add .
+          git commit -a -m "style: apply clang-format"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
