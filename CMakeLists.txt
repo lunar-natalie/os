@@ -55,6 +55,7 @@ endif()
 # Set up platform environment
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED True)
+set(CMAKE_C_EXTENSIONS Off)
 load_target_platform()
 
 # Add source directories
