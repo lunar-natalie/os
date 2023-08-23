@@ -39,7 +39,7 @@ jobs:
       - name: Ammend commit and push changes
         shell: bash
         run: |
-          SRCDIRS=(include lib src tests)
+          SRCDIRS=(include lib src)
           DIFF=0
           for d in ${SRCDIRS[@]}; do
             if [[ -n "$(git diff "$d")" ]]; then
