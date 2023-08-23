@@ -55,13 +55,13 @@ cmake --build build
 ## Requirements
 
 - QEMU executable for the target architecture
-- GRUB2 PC/BIOS modules (x86)
+- GRUB2 PC/BIOS modules (ix86-pc machine type)
 
 ## Command line
 
 Replace:
 
-- `<ARCH>` with the target architecture (i386 for x86 machine targets)
+- `<ARCH>` with the target architecture (i386 for ix86 machine type)
 
 ```sh
 qemu-system-<ARCH> -cdrom build/os.iso
