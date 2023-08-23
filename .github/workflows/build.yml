@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  i686-debug:
+  i686-pc-none-elf-debug:
     runs-on: ubuntu-22.04
 
     container:
