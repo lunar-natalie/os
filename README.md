@@ -32,8 +32,8 @@ Operating system.
 
 Replace:
 
-- `<TARGET_TRIPLET>` with the target platform `<MACH>-<VENDOR>-<SYS>-<ENV>`,
-- `<BUILD_TYPE>` with the desired build type (`Debug` or `Release`).
+- `<TARGET_TRIPLET>` with the target platform `<MACH>-<VENDOR>-<SYS>-<ENV>`
+- `<BUILD_TYPE>` with the desired build type (`Debug` or `Release`)
 
 Additional options:
 
@@ -55,13 +55,13 @@ cmake --build build
 ## Requirements
 
 - QEMU executable for the target architecture
-- GRUB2 PC/BIOS modules
+- GRUB2 PC/BIOS modules (x86)
 
 ## Command line
 
 Replace:
 
-- `<ARCH>` with the target architecture (i386 for x86 machine targets).
+- `<ARCH>` with the target architecture (i386 for x86 machine targets)
 
 ```sh
 qemu-system-<ARCH> -cdrom build/os.iso
