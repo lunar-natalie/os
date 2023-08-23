@@ -39,6 +39,7 @@ else()
   message("-- Unit tests are disabled")
 endif()
 
+# Build targets
 if(os_ENABLE_BUILD)
   # Bootable image dependencies
   if(os_ENABLE_IMAGE)
@@ -53,7 +54,7 @@ if(os_ENABLE_BUILD)
     message("-- Image build is disabled")
   endif()
 
-    # Set up platform environment
+  # Set up platform environment
   set(CMAKE_C_STANDARD 17)
   set(CMAKE_C_STANDARD_REQUIRED True)
   set(CMAKE_C_EXTENSIONS Off)
@@ -64,6 +65,7 @@ if(os_ENABLE_BUILD)
   add_subdirectory(lib)
   add_subdirectory(src)
 
+  # Add image target
   if(os_ENABLE_IMAGE)
     add_subdirectory(image)
   endif()
