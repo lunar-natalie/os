@@ -12,6 +12,7 @@ permissions:
 jobs:
   run:
     runs-on: ubuntu-22.04
+
     steps:
       - name: Cache dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest

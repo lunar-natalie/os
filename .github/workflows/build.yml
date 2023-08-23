@@ -1,0 +1,29 @@
+# GitHub Build workflow.
+# Builds and tests the system.
+name: Build
+
+on:
+  # Execute when any branch is pushed to.
+  push:
+
+  # Allows manual running of the action.
+  workflow_dispatch:
+
+jobs:
+  i686-debug:
+    runs-on: ubuntu-22.04
+
+    container:
+      image: lunar-natalie/os-buildenv-i686-pc-none-elf
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure and build
+        uses: threeal/cmake-action@latest
+        with:
+          args: -DCMAKE_BUILD_TYPE:STRING=Debug -Dos_TARGET_TRIPLET=i686-pc-none-elf
+          generator: Ninja
+          run-build: true
+          run-test: true
