@@ -8,9 +8,11 @@ project(os
 
 # Options
 set(os_TARGET_TRIPLET "" CACHE STRING "Target platform triplet (<MACH>-<VENDOR>-<SYS>-<ENV>). Defaults to the platform reported by the C compiler.")
+option(os_ENABLE_BUILD "Enable build targets" ON)
 option(os_ENABLE_TESTS "Enable unit tests" ON)
 option(os_ENABLE_IMAGE "Enable bootable image build" ON)
 option(os_ENABLE_CLANG_TIDY "Enable clang-tidy for processing source files" ON)
+option(os_ENABLE_CLANG_FORMAT "Enable clang-format target" OFF)
 
 # Tools
 include(cmake/utils.cmake)
@@ -25,9 +27,11 @@ get_all_source_files()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include(cmake/ClangFormat.cmake)
-if(os_ENABLE_CLANG_TIDY)
+if(os_ENABLE_BUILD AND os_ENABLE_CLANG_TIDY)
   include(cmake/ClangTidy.cmake)
+endif()
+if(os_ENABLE_CLANG_FORMAT)
+  include(cmake/ClangFormat.cmake)
 endif()
 
 # Tests
