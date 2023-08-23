@@ -1,4 +1,4 @@
-Operating system
+Operating system.
 
 # Supported platforms
 
@@ -16,7 +16,7 @@ Operating system
 ### Optional
 
 - clang-format >= 14.0.6
-- clang-tidy
+- clang-tidy (requires Ninja or Makefile CMake backend)
 
 ### Tests
 
