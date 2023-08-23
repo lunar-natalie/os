@@ -24,16 +24,16 @@ itoa(char * buffer, unsigned int length, unsigned int num, int base)
     static const char digits[] = "0123456789ABCDEF"; /* Representation digits */
     char *            ptr; /* Pointer to the current character in the buffer */
 
-    /* Write null terminator. */
+    /* Write null terminator */
     ptr  = &buffer[length - 1];
     *ptr = '\0';
 
     do {
         /* Set output char to the digit char indexed by the remainder of
-         * dividing the digit by the base. */
+         * dividing the digit by the base */
         *--ptr = digits[num % base];
         /* Divide by base to get to the next digit until we've got all the
-         * digits. */
+         * digits */
         num /= base;
     } while (num != 0);
 
