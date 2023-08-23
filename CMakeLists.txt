@@ -9,7 +9,7 @@ project(os
 # Options
 set(os_TARGET_TRIPLET "" CACHE STRING "Target platform triplet (<MACH>-<VENDOR>-<SYS>-<ENV>). Defaults to the platform reported by the C compiler.")
 option(os_ENABLE_BUILD "Enable build targets" ON)
-option(os_ENABLE_TESTS "Enable unit tests" ON)
+option(os_ENABLE_TESTS "Enable tests" ON)
 option(os_ENABLE_IMAGE "Enable bootable image build" ON)
 option(os_ENABLE_CLANG_TIDY "Enable clang-tidy for processing source files" ON)
 option(os_ENABLE_CLANG_FORMAT "Enable clang-format target" OFF)
@@ -30,17 +30,23 @@ if(os_ENABLE_CLANG_FORMAT)
   include(cmake/ClangFormat.cmake)
 endif()
 
-# Tests
-if(os_ENABLE_TESTS)
-  include(CTest)
-  find_program(GRUB_FILE grub-file)
-  message("-- Enabled unit tests")
-else()
-  message("-- Unit tests are disabled")
-endif()
-
 # Build targets
 if(os_ENABLE_BUILD)
+  # Set up platform environment
+  set(CMAKE_C_STANDARD 17)
+  set(CMAKE_C_STANDARD_REQUIRED True)
+  set(CMAKE_C_EXTENSIONS Off)
+  load_target_platform()
+
+  # Tests
+  if(os_ENABLE_TESTS)
+    include(CTest)
+    find_program(GRUB_FILE grub-file)
+    message("-- Enabled tests")
+    else()
+    message("-- Tests are disabled")
+  endif()
+
   # Bootable image dependencies
   if(os_ENABLE_IMAGE)
     find_program(GRUB_MKRESCUE grub-mkrescue)
@@ -53,12 +59,6 @@ if(os_ENABLE_BUILD)
     else()
     message("-- Image build is disabled")
   endif()
-
-  # Set up platform environment
-  set(CMAKE_C_STANDARD 17)
-  set(CMAKE_C_STANDARD_REQUIRED True)
-  set(CMAKE_C_EXTENSIONS Off)
-  load_target_platform()
 
   # Add source directories
   add_subdirectory(include)
