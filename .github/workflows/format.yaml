@@ -11,11 +11,7 @@ permissions:
 
 jobs:
   run:
-    runs-on: ubuntu-latest
-    container:
-      image: kevincharm/i686-elf-gcc-toolchain
-      env:
-        DOWNLOAD_GCC: gcc-8.1.0
+    runs-on: ubuntu-22.04
     steps:
       - name: Cache dependencies
         uses: awalsh128/cache-apt-pkgs-action@latest
@@ -35,9 +31,8 @@ jobs:
       - name: Configure and format
         uses: threeal/cmake-action@latest
         with:
-          args: -DCMAKE_BUILD_TYPE:STRING=Debug -DIsoPunk_BUILD_GAME:BOOL=OFF -DIsoPunk_ENABLE_LIBS:BOOL=OFF
+          args: -DCMAKE_BUILD_TYPE:STRING=Debug -Dos_ENABLE_BUILD=OFF -Dos_ENABLE_CLANG_FORMAT=ON
           generator: Ninja
-          cxx-compiler: clang++
           run-build: true
           build-args: --target ClangFormat
 
