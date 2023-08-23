@@ -32,13 +32,13 @@ Operating system.
 
 Replace:
 
-- `<TARGET_TRIPLET>` with the target platform `<MACH>-<VENDOR>-<SYS>-<ENV>`
-- `<BUILD_TYPE>` with the desired build type (`Debug` or `Release`)
+- `<TARGET_TRIPLET>` with the target platform `<MACH>-<VENDOR>-<SYS>-<ENV>`,
+- `<BUILD_TYPE>` with the desired build type (`Debug` or `Release`).
 
 Additional options:
 
-- `-Dos_ENABLE_TESTS=ON` - enable tests
-- `-Dos_ENABLE_IMAGE=ON` - enable bootable image creation
+- `-Dos_ENABLE_TESTS=ON` - Enable tests
+- `-Dos_ENABLE_IMAGE=ON` - Enable bootable image creation
 
 ```sh
 cmake -DCMAKE_BUILD_TYPE:STRING=<BUILD_TYPE> -Dos_TARGET_TRIPLET=<TARGET_TRIPLET> -Bbuild
@@ -61,7 +61,7 @@ cmake --build build
 
 Replace:
 
-- `<ARCH>` with the target architecture (i386 for the x86 machine)
+- `<ARCH>` with the target architecture (i386 for x86 machine targets).
 
 ```sh
 qemu-system-<ARCH> -cdrom build/os.iso
