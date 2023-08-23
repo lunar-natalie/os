@@ -3,6 +3,7 @@
 name: Format
 
 on:
+  # Execute when any branch is pushed to.
   push:
 
 permissions:
