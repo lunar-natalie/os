@@ -16,18 +16,14 @@ option(os_ENABLE_CLANG_FORMAT "Enable clang-format target" OFF)
 
 # Tools
 include(cmake/utils.cmake)
-
 set(os_SOURCE_DIRNAMES
   "include"
   "lib"
   "src"
 )
-
 get_all_source_files()
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
 if(os_ENABLE_BUILD AND os_ENABLE_CLANG_TIDY)
+  set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
   include(cmake/ClangTidy.cmake)
 endif()
 if(os_ENABLE_CLANG_FORMAT)
@@ -43,30 +39,32 @@ else()
   message("-- Unit tests are disabled")
 endif()
 
-# Bootable image
-if(os_ENABLE_IMAGE)
-  find_program(GRUB_MKRESCUE grub-mkrescue)
-  if(GRUB_MKRESCUE STREQUAL "GRUB_MKRESCUE-NOTFOUND")
-    set(os_ENABLE_IMAGE OFF)
-    message("-- grub-mkrescue not found: image build has been disabled")
-  else()
-    message("-- Enabled image build")
+if(os_ENABLE_BUILD)
+  # Bootable image dependencies
+  if(os_ENABLE_IMAGE)
+    find_program(GRUB_MKRESCUE grub-mkrescue)
+    if(GRUB_MKRESCUE STREQUAL "GRUB_MKRESCUE-NOTFOUND")
+      set(os_ENABLE_IMAGE OFF)
+      message("-- grub-mkrescue not found: image build has been disabled")
+    else()
+      message("-- Enabled image build")
+    endif()
+    else()
+    message("-- Image build is disabled")
   endif()
-else()
-  message("-- Image build is disabled")
-endif()
 
-# Set up platform environment
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_C_STANDARD_REQUIRED True)
-set(CMAKE_C_EXTENSIONS Off)
-load_target_platform()
+    # Set up platform environment
+  set(CMAKE_C_STANDARD 17)
+  set(CMAKE_C_STANDARD_REQUIRED True)
+  set(CMAKE_C_EXTENSIONS Off)
+  load_target_platform()
 
-# Add source directories
-add_subdirectory(include)
-add_subdirectory(lib)
-add_subdirectory(src)
+  # Add source directories
+  add_subdirectory(include)
+  add_subdirectory(lib)
+  add_subdirectory(src)
 
-if(os_ENABLE_IMAGE)
-  add_subdirectory(image)
+  if(os_ENABLE_IMAGE)
+    add_subdirectory(image)
+  endif()
 endif()
