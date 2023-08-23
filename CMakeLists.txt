@@ -1,6 +1,6 @@
 # Global CMake config.
 
-cmake_minimum_required(VERSION 3.25.1)
+cmake_minimum_required(VERSION 3.22.1)
 
 project(os
   VERSION 1.0.0

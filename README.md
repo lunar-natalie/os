@@ -8,7 +8,7 @@ Operating system.
 
 ## Requirements
 
-- CMake >= 3.25.1
+- CMake >= 3.22.1
 - CMake backend
 - GCC cross-compiler >= 8.1.0
 - Binutils cross-toolchain
