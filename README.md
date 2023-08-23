@@ -2,7 +2,7 @@ Operating system.
 
 # Supported platforms
 
-- `ix86-pc-none-elf` (i386, i486, i586)
+- `ix86-pc-none-elf` (i386, i486, i586, i686)
 
 # Build
 
