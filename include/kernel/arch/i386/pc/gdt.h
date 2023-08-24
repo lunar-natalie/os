@@ -18,34 +18,38 @@
 #define GDT_MAX_LIMIT       0xFFFFF
 #define GDT_RING0_TSS_INDEX GDT_LENGTH - 1
 
+/* High-level representation of a GDT segment descriptor. */
 struct gdt_entry {
-    uint32_t base;   /* 32-bit linear start address */
-    uint32_t limit;  /* 20-bit maximum addressable unit */
-    uint8_t  access; /* Access byte */
-    uint8_t  flags;  /* Flags byte */
+    /* Linear 32-bit address to the start of the segment. */
+    uint32_t base;
+    /* Maximum 20-bit unit addressable by the segment. */
+    uint32_t limit;
+    /* Access byte. */
+    uint8_t  access;
+    /* Flags byte. */
+    uint8_t  flags;
 };
 
-/* High-level representation of a GDT segment descriptor. */
 typedef struct gdt_entry gdt_entry_t;
 
+/* Writable GDT entry data arranged in bit-fields. */
 struct gdt_data {
     /* Limit bits 0-15. */
     unsigned int limit_low  : 16;
     /* Base bits 0-15. */
     unsigned int base_low   : 24;
-    /* Access bits. */
+    /* Access byte. */
     unsigned int access     : 8;
     /* Limit bits 16-19.  */
     unsigned int limit_high : 4;
     /* Only used in software; has no effect on hardware. */
     unsigned int reserved   : 1;
-    /* Flag bits. */
+    /* Flag byte. */
     unsigned int flags      : 3;
     /* Base bits 24-31. */
     unsigned int base_high  : 8;
 } __attribute__((packed));
 
-/* Real GDT entry data arranged in bit-fields. */
 typedef struct gdt_data gdt_data_t;
 
 /* GDT entry access bits. */
