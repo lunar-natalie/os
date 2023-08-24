@@ -32,8 +32,8 @@ Operating system.
 
 Replace:
 
-- `<TARGET_TRIPLET>` with the target platform `<MACH>-<VENDOR>-<SYS>-<ENV>`
 - `<BUILD_TYPE>` with the desired build type (`Debug` or `Release`)
+- `<TARGET_TRIPLET>` with the target platform `<MACH>-<VENDOR>-<SYS>-<ENV>`
 
 Additional options:
 
