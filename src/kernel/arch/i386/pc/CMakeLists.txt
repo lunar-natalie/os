@@ -5,6 +5,7 @@ update_parent(TARGET Kernel
     "boot.s"
     "gdt.c"
     "gdt.s"
+    "idt.c"
     "main.c"
     "tss.c"
     "tss.s"
