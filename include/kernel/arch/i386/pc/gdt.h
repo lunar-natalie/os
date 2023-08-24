@@ -18,6 +18,8 @@
 #define GDT_MAX_LIMIT       0xFFFFF
 #define GDT_RING0_TSS_INDEX GDT_LENGTH - 1
 
+typedef uint16_t gdt_index_t;
+
 /* High-level representation of a GDT segment descriptor. */
 struct gdt_entry {
     /* Linear 32-bit address to the start of the segment. */

@@ -79,7 +79,7 @@ void gdt_init(tss_t const * ring0_tss)
     gdt_entries[4]        = &ring0_tss_entry;
 
     /* Encode (skip null descriptor) */
-    for (size_t i = 0; i < GDT_LENGTH - 1; ++i) {
+    for (gdt_index_t i = 0; i < GDT_LENGTH - 1; ++i) {
         encode_gdt_entry(&gdt[i + 1], gdt_entries[i]);
     }
 
