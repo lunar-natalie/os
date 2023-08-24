@@ -31,7 +31,7 @@ struct idt_data {
     /* Segment selector. */
     unsigned int selector        : 16;
     /* Only used in software; has no effect on hardware. */
-    unsigned int reserved        : 1;
+    unsigned int reserved        : 8;
     /* Type attirubtes byte. */
     unsigned int type_attributes : 8;
     /* Offset bits 16-31. */
