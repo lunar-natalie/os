@@ -39,6 +39,8 @@ size_t strlen(const char * str);
  * @param dest Pointer to the object to fill.
  * @param ch Fill byte.
  * @param count Number of bytes to fill.
+ *
+ * @return A copy of `dest`.
  */
 void * memset(void * dest, int ch, size_t count);
 
@@ -52,7 +54,7 @@ void * memset(void * dest, int ch, size_t count);
  * @param src Pointer to the object to copy from.
  * @param count Number of bytes to copy.
  *
- * @return Copy of `dest`.
+ * @return A copy of `dest`.
  */
 void * memcpy(void * restrict dest, const void * restrict src, size_t count);
 
