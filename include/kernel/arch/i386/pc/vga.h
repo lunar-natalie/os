@@ -1,7 +1,10 @@
+/**
+ * @file vga.h
+ * @brief Video Graphics Adapter.
+ */
+
 /*
- * vga.h
- * Video Graphics Adapter.
- *
+ * OS Kernel
  * Copyright (c) 2023 Natalie Wiggins <islifepeachy@outlook.com>
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -16,16 +19,15 @@
 #define VGA_WIDTH  80
 #define VGA_HEIGHT 25
 
-struct vga {
+/** Text mode VGA info object. */
+typedef struct vga {
     size_t     row;
     size_t     column;
     uint8_t    color;
     uint16_t * buffer;
-};
+} vga_t;
 
-typedef struct vga vga_t;
-
-/* Hardware text mode color constants. */
+/** Hardware text mode color constants. */
 enum vga_color {
     VGA_COLOR_BLACK         = 0,
     VGA_COLOR_BLUE          = 1,
@@ -56,19 +58,25 @@ static inline uint16_t make_vga_entry(unsigned char data, uint8_t color)
     return (uint16_t) data | (uint16_t) color << 8;
 }
 
-static inline uint16_t make_vga_index(size_t x, size_t y)
+static inline uint16_t make_vga_index(uint8_t x, uint8_t y)
 {
     return y * VGA_WIDTH + x;
 }
 
+/**
+ * Initializes the VGA text mode.
+ *
+ * @param vga Pointer to the VGA driver data structure.
+ */
 void vga_init(vga_t * vga);
 
 void vga_set_color(vga_t * vga, uint8_t color);
 
-void vga_put_entry_at(vga_t * vga, char c, uint8_t color, size_t x, size_t y);
+void vga_put_entry_at(vga_t * vga, char c, uint8_t color, uint8_t x, uint8_t y);
 
 void vga_put_char(vga_t * vga, char c);
 
+/** Scrolls the VGA buffer by 1 line, in software. */
 void vga_scroll(vga_t * vga);
 
 void vga_write(vga_t * vga, const char * s, size_t length);

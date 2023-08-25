@@ -1,7 +1,10 @@
+/**
+ * @file tss.h
+ * @brief Task State Segment.
+ */
+
 /*
- * tss.h
- * Task State Segment.
- *
+ * OS Kernel
  * Copyright (c) 2023 Natalie Wiggins <islifepeachy@outlook.com>
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -12,12 +15,12 @@
 
 #include <stdint.h>
 
-/* Task State Segment. */
-struct tss {
-    uint32_t prev_tss; /* Previous TSS. With hardware task switching, these form
-                          a backward linked list. */
-    uint32_t esp0;     /* Stack pointer to load when changing to kernel mode. */
-    uint32_t ss0;      /* Stack segment to load when changing to kernel mode. */
+/* Task State Segment data structure. */
+typedef struct tss {
+    uint32_t prev_tss; /** Previous TSS. With hardware task switching, these
+                          form a backward linked list. */
+    uint32_t esp0; /** Stack pointer to load when changing to kernel mode. */
+    uint32_t ss0;  /** Stack segment to load when changing to kernel mode. */
 
     /* Unused. */
     /* esp and ss 1 and 2 are used when switching to rings 1 or 2. */
@@ -45,10 +48,9 @@ struct tss {
     uint32_t ldt;
     uint16_t trap;
     uint16_t iomap_base;
-} __attribute__((packed));
+} __attribute__((packed)) tss_t;
 
-typedef struct tss tss_t;
-
+/** @return Pointer to initialized kernel-mode TSS data. */
 tss_t * tss_init_ring0();
 
 /**

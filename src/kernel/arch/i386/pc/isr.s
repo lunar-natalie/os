@@ -1,14 +1,16 @@
 /*
  * isr.s
  *
+ * OS Kernel
  * Copyright (c) 2023 Natalie Wiggins <islifepeachy@outlook.com>
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 /*
- * Creates an ISR wrapper (isr_handler_irqN) for a given IRQ 'irq', which calls
- * an externally defined handler with the symbol 'handler'.
+ * Creates an ISR wrapper with the symbol `isr_handler_irqN`, where `N` is the
+ * given IRQ handler 'irq', which calls an externally defined handler with the
+ * symbol `handler`.
  */
 .macro isr_handler_extern irq handler
 .extern \handler
@@ -24,7 +26,8 @@ isr_handler_irq\irq:
 .endm
 
 /*
- * Creates an empty ISR wrapper (isr_handler_irqN) for a given IRQ 'irq'.
+ * Creates an empty ISR wrapper with the symbol `isr_handler_irqN`, where `N`
+ * is the given IRQ number `irq`.
  */
 .macro isr_handler_empty irq
 .global isr_handler_irq\irq

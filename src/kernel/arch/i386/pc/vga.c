@@ -1,6 +1,7 @@
 /*
  * vga.c
  *
+ * OS Kernel
  * Copyright (c) 2023 Natalie Wiggins <islifepeachy@outlook.com>
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -20,10 +21,10 @@ void vga_init(vga_t * vga)
     vga->column = 0;
     vga->color  = make_vga_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
     vga->buffer = VGA_BUFFER;
-    for (size_t y = 0; y < VGA_HEIGHT; ++y) {
-        for (size_t x = 0; x < VGA_WIDTH; ++x) {
-            const size_t index = y * VGA_WIDTH + x;
-            vga->buffer[index] = make_vga_entry(' ', vga->color);
+    for (uint8_t y = 0; y < VGA_HEIGHT; ++y) {
+        for (uint8_t x = 0; x < VGA_WIDTH; ++x) {
+            vga->buffer[make_vga_index(x, y)] =
+                make_vga_entry('\0', vga->color);
         }
     }
 }
@@ -33,7 +34,7 @@ void vga_set_color(vga_t * vga, uint8_t color)
     vga->color = color;
 }
 
-void vga_put_entry_at(vga_t * vga, char c, uint8_t color, size_t x, size_t y)
+void vga_put_entry_at(vga_t * vga, char c, uint8_t color, uint8_t x, uint8_t y)
 {
     vga->buffer[make_vga_index(x, y)] = make_vga_entry(c, color);
 }
@@ -41,11 +42,11 @@ void vga_put_entry_at(vga_t * vga, char c, uint8_t color, size_t x, size_t y)
 void vga_next_line(vga_t * vga)
 {
     vga->column = 0;
-    if (vga->row + 1 == VGA_HEIGHT) {
-        vga_scroll(vga);
+    if (vga->row < VGA_HEIGHT - 1) {
+        ++vga->row;
     }
     else {
-        ++vga->row;
+        vga_scroll(vga);
     }
 }
 
@@ -66,13 +67,16 @@ void vga_scroll(vga_t * vga)
 {
     static const uint16_t last_row = (VGA_HEIGHT - 1) * VGA_WIDTH;
 
-    for (size_t y = 0; y < VGA_HEIGHT - 1; ++y) {
+    /* Copy each character in each row to the row after, until the final row has
+     * been reached. */
+    for (uint8_t y = 0; y < VGA_HEIGHT - 1; ++y) {
         memcpy((void *) (vga->buffer + (y * VGA_WIDTH)),
                (void *) (vga->buffer + ((y + 1) * VGA_WIDTH)),
                VGA_WIDTH);
     }
 
-    for (size_t i = last_row; i < last_row + VGA_WIDTH; ++i) {
+    /* Clear the last row. */
+    for (uint16_t i = last_row; i < last_row + VGA_WIDTH; ++i) {
         vga->buffer[i] = 0;
     }
 }

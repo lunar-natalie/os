@@ -2,6 +2,7 @@
  * boot.s
  * Multiboot v1-compliant kernel bootstrap assembly for i386-pc.
  *
+ * OS Kernel
  * Copyright (c) 2023 Natalie Wiggins <islifepeachy@outlook.com>
  *
  * SPDX-License-Identifier: GPL-3.0-or-later

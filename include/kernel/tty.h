@@ -1,7 +1,10 @@
+/**
+ * @file tty.h
+ * @brief Terminal utilities.
+ */
+
 /*
- * tty.h
- * Terminal utilities.
- *
+ * OS Kernel
  * Copyright (c) 2023 Natalie Wiggins <islifepeachy@outlook.com>
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -12,6 +15,7 @@
 
 #include <stddef.h>
 
+/** Initializes the terminal for output using the default kernel video mode. */
 void tty_init(void);
 
 void tty_put_char(char c);

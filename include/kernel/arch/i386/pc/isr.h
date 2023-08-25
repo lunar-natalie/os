@@ -1,7 +1,10 @@
+/**
+ * @file isr.h
+ * @brief Wrappers for Interrupt Service Routines.
+ */
+
 /*
- * isr.h
- * Wrappers for Interrupt Service Routines.
- *
+ * OS Kernel
  * Copyright (c) 2023 Natalie Wiggins <islifepeachy@outlook.com>
  *
  * SPDX-License-Identifier: GPL-3.0-or-later

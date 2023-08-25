@@ -2,7 +2,7 @@
  * link.ld
  * Kernel linker script for x86_64-pc.
  *
- * OS project
+ * OS Kernel
  * Copyright (c) 2023 Natalie Wiggins <islifepeachy@outlook.com>
  *
  * SPDX-License-Identifier: GPL-3.0-or-later

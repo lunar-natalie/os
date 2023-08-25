@@ -1,7 +1,10 @@
+/**
+ * @file stdio.h
+ * @brief IO utilities.
+ */
+
 /*
- * stdio.h
- * IO utilities.
- *
+ * OS libk
  * Copyright (c) 2023 Natalie Wiggins <islifepeachy@outlook.com>
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -13,8 +16,21 @@
 #include <stdarg.h>
 #include <stddef.h>
 
+/**
+ * Loads the data from the given locations, converts them to character string
+ * equivalents and writes the results to `stdout`.
+ *
+ * @param format Pointer to a null-terminated byte string specifying how to
+ * interpret the data
+ * @param ...	Arguments specifying data to print. If any argument after
+ * default argument promotions is not the type expected by the corresponding
+ * conversion specifier, or if there are fewer arguments than required by
+ * format, the behavior is undefined. If there are more arguments than required
+ * by format, the extraneous arguments are evaluated and ignored.
+ */
 int printf(const char * restrict format, ...);
 
+/* Kernel implementation. */
 int _vprintf(const char * restrict format, va_list * const args);
 
 #endif /* _STDIO_H */

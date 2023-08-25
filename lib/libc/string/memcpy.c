@@ -1,6 +1,7 @@
 /*
  * memcpy.c
  *
+ * OS libk
  * Copyright (c) 2023 Natalie Wiggins <islifepeachy@outlook.com>
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
@@ -10,7 +11,7 @@
 
 #include <stddef.h>
 
-void * memcpy(void * dest, const void * src, size_t count)
+void * memcpy(void * restrict dest, const void * restrict src, size_t count)
 {
     char *       cdest = (char *) dest;
     const char * csrc  = (char *) src;
