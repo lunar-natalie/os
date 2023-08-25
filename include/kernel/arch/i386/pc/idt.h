@@ -12,20 +12,22 @@
 
 #include <stdint.h>
 
+#define IDT_LENGTH UINT8_MAX
+
+typedef uint8_t idt_index_t;
+
 /* High level representation of an IDT descriptor. */
-struct idt_entry {
+typedef struct idt_entry {
     /* Address of the ISR entry point. */
     uint32_t offset;
     /* Code segment selector which points to a valid entry in the GDT or LDT. */
     uint16_t selector;
     /* Type attributes byte. */
     uint8_t  type_attributes;
-};
-
-typedef struct idt_entry idt_entry_t;
+} idt_entry_t;
 
 /* Writable IDT entry data arranged in bit-fields. */
-struct idt_data {
+typedef struct idt_data {
     /* Offset bits 0-15. */
     unsigned int offset_low      : 16;
     /* Segment selector. */
@@ -36,9 +38,7 @@ struct idt_data {
     unsigned int type_attributes : 8;
     /* Offset bits 16-31. */
     unsigned int offset_high     : 16;
-} __attribute__((packed));
-
-typedef struct idt_data idt_data_t;
+} __attribute__((packed)) idt_data_t;
 
 /* IDT entry type attribute bits. */
 enum idt_type_attributes {
@@ -49,12 +49,47 @@ enum idt_type_attributes {
     IDT_ATTRIB_DPL_2 = 0b01000000,
     IDT_ATTRIB_DPL_3 = 0b01100000,
     /* Gate types. */
-    IDT_ATTRIB_GATE_TYPE_TASK =
+    IDT_ATTRIB_GATE_TASK =
         0b00000101, /* Task gate: IDT offset is unused should be zero. */
-    IDT_ATTRIB_GATE_TYPE_INT16  = 0b00000110, /* 16-bit interrupt gate. */
-    IDT_ATTRIB_GATE_TYPE_TRAP16 = 0b00000111, /* 16-bit trap gate. */
-    IDT_ATTRIB_GATE_TYPE_INT32  = 0b00001110, /* 32-bit interrupt gate. */
-    IDT_ATTRIB_GATE_TYPE_TRAP32 = 0b00001111, /* 32-bit trap gate. */
+    IDT_ATTRIB_GATE_INT16  = 0b00000110, /* 16-bit interrupt gate. */
+    IDT_ATTRIB_GATE_TRAP16 = 0b00000111, /* 16-bit trap gate. */
+    IDT_ATTRIB_GATE_INT32  = 0b00001110, /* 32-bit interrupt gate. */
+    IDT_ATTRIB_GATE_TRAP32 = 0b00001111, /* 32-bit trap gate. */
 };
+
+/* Complete IDT type attribute bytes. */
+enum idt_types {
+    IDT_TYPE_RING0_TASK   = IDT_ATTRIB_P | IDT_ATTRIB_GATE_TASK,
+    IDT_TYPE_RING0_INT16  = IDT_ATTRIB_P | IDT_ATTRIB_GATE_INT16,
+    IDT_TYPE_RING0_TRAP16 = IDT_ATTRIB_P | IDT_ATTRIB_GATE_TRAP16,
+    IDT_TYPE_RING0_INT32  = IDT_ATTRIB_P | IDT_ATTRIB_GATE_INT32,
+    IDT_TYPE_RING0_TRAP32 = IDT_ATTRIB_P | IDT_ATTRIB_GATE_TRAP32,
+    IDT_TYPE_RING3_INT16 =
+        IDT_ATTRIB_P | IDT_ATTRIB_DPL_3 | IDT_ATTRIB_GATE_INT16,
+    IDT_TYPE_RING3_TRAP16 =
+        IDT_ATTRIB_P | IDT_ATTRIB_DPL_3 | IDT_ATTRIB_GATE_TRAP16,
+    IDT_TYPE_RING3_INT32 =
+        IDT_ATTRIB_P | IDT_ATTRIB_DPL_3 | IDT_ATTRIB_GATE_INT32,
+    IDT_TYPE_RING3_TRAP32 =
+        IDT_ATTRIB_P | IDT_ATTRIB_DPL_3 | IDT_ATTRIB_GATE_TRAP32,
+};
+
+/**
+ * Encodes built-in IDT entries and loads the IDT.
+ *
+ * @note Must be called after the GDT/LDT has been loaded.
+ */
+void idt_init(void);
+
+void encode_idt_entry(idt_data_t * dest, idt_entry_t const * source);
+
+/**
+ * Loads the IDT into the IDTR register.
+ *
+ * @param offset 32-bit table start address.
+ * @param size 16-bit length of the table in bytes.
+ * @return 0 if valid IDT, or 1 if invalid.
+ */
+extern int load_idt(idt_data_t * offset, uint16_t size);
 
 #endif /* _KERNEL_ARCH_I386_PC_IDT_H */
