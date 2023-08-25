@@ -17,8 +17,12 @@
 
 /* Task State Segment data structure. */
 typedef struct tss {
-    uint32_t prev_tss; /** Previous TSS. With hardware task switching, these
-                          form a backward linked list. */
+    /**
+     * Previous TSS. With hardware task switching, these form a backward linked
+     * list.
+     */
+    uint32_t prev_tss;
+
     uint32_t esp0; /** Stack pointer to load when changing to kernel mode. */
     uint32_t ss0;  /** Stack segment to load when changing to kernel mode. */
 
