@@ -21,7 +21,7 @@
 typedef uint16_t gdt_index_t;
 
 /* High-level representation of a GDT segment descriptor. */
-struct gdt_entry {
+typedef struct gdt_entry {
     /* Linear 32-bit address to the start of the segment. */
     uint32_t base;
     /* Maximum 20-bit unit addressable by the segment. */
@@ -30,12 +30,10 @@ struct gdt_entry {
     uint8_t  access;
     /* Flags byte. */
     uint8_t  flags;
-};
-
-typedef struct gdt_entry gdt_entry_t;
+} gdt_entry_t;
 
 /* Writable GDT entry data arranged in bit-fields. */
-struct gdt_data {
+typedef struct gdt_data {
     /* Limit bits 0-15. */
     unsigned int limit_low  : 16;
     /* Base bits 0-15. */
@@ -50,9 +48,7 @@ struct gdt_data {
     unsigned int flags      : 3;
     /* Base bits 24-31. */
     unsigned int base_high  : 8;
-} __attribute__((packed));
-
-typedef struct gdt_data gdt_data_t;
+} __attribute__((packed)) gdt_data_t;
 
 /* GDT entry access bits. */
 enum gdt_access_bits {
@@ -97,6 +93,7 @@ enum gdt_flag_bits {
     GDT_FLAG_L  = 0b00000010,
 };
 
+/* Encodes built-in GDT entries and loads the GDT. */
 void gdt_init(tss_t const * ring0_tss);
 
 void encode_gdt_entry(gdt_data_t * dest, gdt_entry_t const * source);
