@@ -1,4 +1,25 @@
-Operating system.
+<p align="center">
+  <b>Operating System Project</b><br>
+  <br>
+  <a href="https://github.com/lunar-natalie/os/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/lunar-natalie/os"
+      alt="License">
+  </a>
+  <a href="https://github.com/lunar-natalie/os/actions/workflows/build.yml">
+    <img src="https://github.com/lunar-natalie/os/actions/workflows/build.yml/badge.svg?event=push"
+      alt="Build">
+  </a>
+  <a href="https://github.com/lunar-natalie/os/actions/workflows/docs.yml">
+    <img src="https://github.com/lunar-natalie/os/actions/workflows/docs.yml/badge.svg?event=push"
+      alt="Documentation">
+  </a><br>
+  <br>
+  <a href="https://lunar-natalie.github.io/os">Docs</a> |
+    <a href="https://github.com/lunar-natalie/os">GitHub</a><br>
+  <br>
+  <i>// Under Construction //</i><br>
+  <br>
+</p>
 
 # Supported platforms
 
@@ -27,6 +48,10 @@ Operating system.
 - grub-mkrescue (GRUB2)
 - xorriso
 - mtools
+
+## Docker environment
+
+A [Docker image](https://github.com/lunar-natalie/os-buildenv-i686-pc-none-elf) is provided with an included toolchain targeting `i686-pc-none-elf` for CI builds.
 
 ## CMake: Configure
 
