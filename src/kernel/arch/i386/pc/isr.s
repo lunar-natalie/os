@@ -8,294 +8,309 @@
  */
 
 /*
- * Creates an ISR wrapper with the symbol `isr_handler_irqN`, where `N` is the
- * given IRQ handler 'irq', which calls an externally defined handler with the
- * symbol `handler`.
+ * Creates an ISR handler `isr_stub_N` where N is the given irq. Calls the
+ * default exception handler.
  */
-.macro isr_handler_extern irq handler
+.macro isr_err_stub irq
 .extern \handler
-.global isr_handler_irq\irq
-.type isr_handler_irq\irq, @function
+.global isr_stub_\irq
 .align 4		/* SysV ABI requires 32-bit alignment */
-isr_handler_irq\irq:
+isr_stub_\irq:
 	pusha
 	cld		/* SysV ABI requires DF to be clear on function entry */
-	call	\handler
+	call	exception_handler
 	popa
 	iret
 .endm
 
 /*
- * Creates an empty ISR wrapper with the symbol `isr_handler_irqN`, where `N`
- * is the given IRQ number `irq`.
+ * Creates an empty ISR handler `isr_stub_N` where N is the given irq.
  */
-.macro isr_handler_empty irq
-.global isr_handler_irq\irq
-.type isr_handler_irq\irq, @function
+.macro isr_no_err_stub irq
+.extern \handler
+.global isr_stub_\irq
 .align 4		/* SysV ABI requires 32-bit alignment */
-isr_handler_irq\irq:
-	pusha
-	cld		/* SysV ABI requires DF to be clear on function entry */
-	popa
+isr_stub_\irq:
 	iret
 .endm
 
 .section .text
 
-/* ISRs for IRQs 0-255. */
-isr_handler_empty 0
-isr_handler_empty 1
-isr_handler_empty 2
-isr_handler_empty 3
-isr_handler_empty 4
-isr_handler_empty 5
-isr_handler_empty 6
-isr_handler_empty 7
-isr_handler_empty 8
-isr_handler_empty 9
-isr_handler_empty 10
-isr_handler_empty 11
-isr_handler_empty 12
-isr_handler_empty 13
-isr_handler_empty 14
-isr_handler_empty 15
-isr_handler_empty 16
-isr_handler_empty 17
-isr_handler_empty 18
-isr_handler_empty 19
-isr_handler_empty 20
-isr_handler_empty 21
-isr_handler_empty 22
-isr_handler_empty 23
-isr_handler_empty 24
-isr_handler_empty 25
-isr_handler_empty 26
-isr_handler_empty 27
-isr_handler_empty 28
-isr_handler_empty 29
-isr_handler_empty 30
-isr_handler_empty 31
-isr_handler_empty 32
-isr_handler_empty 33
-isr_handler_empty 34
-isr_handler_empty 35
-isr_handler_empty 36
-isr_handler_empty 37
-isr_handler_empty 38
-isr_handler_empty 39
-isr_handler_empty 40
-isr_handler_empty 41
-isr_handler_empty 42
-isr_handler_empty 43
-isr_handler_empty 44
-isr_handler_empty 45
-isr_handler_empty 46
-isr_handler_empty 47
-isr_handler_empty 48
-isr_handler_empty 49
-isr_handler_empty 50
-isr_handler_empty 51
-isr_handler_empty 52
-isr_handler_empty 53
-isr_handler_empty 54
-isr_handler_empty 55
-isr_handler_empty 56
-isr_handler_empty 57
-isr_handler_empty 58
-isr_handler_empty 59
-isr_handler_empty 60
-isr_handler_empty 61
-isr_handler_empty 62
-isr_handler_empty 63
-isr_handler_empty 64
-isr_handler_empty 65
-isr_handler_empty 66
-isr_handler_empty 67
-isr_handler_empty 68
-isr_handler_empty 69
-isr_handler_empty 70
-isr_handler_empty 71
-isr_handler_empty 72
-isr_handler_empty 73
-isr_handler_empty 74
-isr_handler_empty 75
-isr_handler_empty 76
-isr_handler_empty 77
-isr_handler_empty 78
-isr_handler_empty 79
-isr_handler_empty 80
-isr_handler_empty 81
-isr_handler_empty 82
-isr_handler_empty 83
-isr_handler_empty 84
-isr_handler_empty 85
-isr_handler_empty 86
-isr_handler_empty 87
-isr_handler_empty 88
-isr_handler_empty 89
-isr_handler_empty 90
-isr_handler_empty 91
-isr_handler_empty 92
-isr_handler_empty 93
-isr_handler_empty 94
-isr_handler_empty 95
-isr_handler_empty 96
-isr_handler_empty 97
-isr_handler_empty 98
-isr_handler_empty 99
-isr_handler_empty 100
-isr_handler_empty 101
-isr_handler_empty 102
-isr_handler_empty 103
-isr_handler_empty 104
-isr_handler_empty 105
-isr_handler_empty 106
-isr_handler_empty 107
-isr_handler_empty 108
-isr_handler_empty 109
-isr_handler_empty 110
-isr_handler_empty 111
-isr_handler_empty 112
-isr_handler_empty 113
-isr_handler_empty 114
-isr_handler_empty 115
-isr_handler_empty 116
-isr_handler_empty 117
-isr_handler_empty 118
-isr_handler_empty 119
-isr_handler_empty 120
-isr_handler_empty 121
-isr_handler_empty 122
-isr_handler_empty 123
-isr_handler_empty 124
-isr_handler_empty 125
-isr_handler_empty 126
-isr_handler_empty 127
-isr_handler_empty 128
-isr_handler_empty 129
-isr_handler_empty 130
-isr_handler_empty 131
-isr_handler_empty 132
-isr_handler_empty 133
-isr_handler_empty 134
-isr_handler_empty 135
-isr_handler_empty 136
-isr_handler_empty 137
-isr_handler_empty 138
-isr_handler_empty 139
-isr_handler_empty 140
-isr_handler_empty 141
-isr_handler_empty 142
-isr_handler_empty 143
-isr_handler_empty 144
-isr_handler_empty 145
-isr_handler_empty 146
-isr_handler_empty 147
-isr_handler_empty 148
-isr_handler_empty 149
-isr_handler_empty 150
-isr_handler_empty 151
-isr_handler_empty 152
-isr_handler_empty 153
-isr_handler_empty 154
-isr_handler_empty 155
-isr_handler_empty 156
-isr_handler_empty 157
-isr_handler_empty 158
-isr_handler_empty 159
-isr_handler_empty 160
-isr_handler_empty 161
-isr_handler_empty 162
-isr_handler_empty 163
-isr_handler_empty 164
-isr_handler_empty 165
-isr_handler_empty 166
-isr_handler_empty 167
-isr_handler_empty 168
-isr_handler_empty 169
-isr_handler_empty 170
-isr_handler_empty 171
-isr_handler_empty 172
-isr_handler_empty 173
-isr_handler_empty 174
-isr_handler_empty 175
-isr_handler_empty 176
-isr_handler_empty 177
-isr_handler_empty 178
-isr_handler_empty 179
-isr_handler_empty 180
-isr_handler_empty 181
-isr_handler_empty 182
-isr_handler_empty 183
-isr_handler_empty 184
-isr_handler_empty 185
-isr_handler_empty 186
-isr_handler_empty 187
-isr_handler_empty 188
-isr_handler_empty 189
-isr_handler_empty 190
-isr_handler_empty 191
-isr_handler_empty 192
-isr_handler_empty 193
-isr_handler_empty 194
-isr_handler_empty 195
-isr_handler_empty 196
-isr_handler_empty 197
-isr_handler_empty 198
-isr_handler_empty 199
-isr_handler_empty 200
-isr_handler_empty 201
-isr_handler_empty 202
-isr_handler_empty 203
-isr_handler_empty 204
-isr_handler_empty 205
-isr_handler_empty 206
-isr_handler_empty 207
-isr_handler_empty 208
-isr_handler_empty 209
-isr_handler_empty 210
-isr_handler_empty 211
-isr_handler_empty 212
-isr_handler_empty 213
-isr_handler_empty 214
-isr_handler_empty 215
-isr_handler_empty 216
-isr_handler_empty 217
-isr_handler_empty 218
-isr_handler_empty 219
-isr_handler_empty 220
-isr_handler_empty 221
-isr_handler_empty 222
-isr_handler_empty 223
-isr_handler_empty 224
-isr_handler_empty 225
-isr_handler_empty 226
-isr_handler_empty 227
-isr_handler_empty 228
-isr_handler_empty 229
-isr_handler_empty 230
-isr_handler_empty 231
-isr_handler_empty 232
-isr_handler_empty 233
-isr_handler_empty 234
-isr_handler_empty 235
-isr_handler_empty 236
-isr_handler_empty 237
-isr_handler_empty 238
-isr_handler_empty 239
-isr_handler_empty 240
-isr_handler_empty 241
-isr_handler_empty 242
-isr_handler_empty 243
-isr_handler_empty 244
-isr_handler_empty 245
-isr_handler_empty 246
-isr_handler_empty 247
-isr_handler_empty 248
-isr_handler_empty 249
-isr_handler_empty 250
-isr_handler_empty 251
-isr_handler_empty 252
-isr_handler_empty 253
-isr_handler_empty 254
-isr_handler_empty 255
+/* Exception ISRs */
+.extern exception_handler
+isr_no_err_stub 0
+isr_no_err_stub 1
+isr_no_err_stub 2
+isr_no_err_stub 3
+isr_no_err_stub 4
+isr_no_err_stub 5
+isr_no_err_stub 6
+isr_no_err_stub 7
+isr_err_stub    8
+isr_no_err_stub 9
+isr_err_stub    10
+isr_err_stub    11
+isr_err_stub    12
+isr_err_stub    13
+isr_err_stub    14
+isr_no_err_stub 15
+isr_no_err_stub 16
+isr_err_stub    17
+isr_no_err_stub 18
+isr_no_err_stub 19
+isr_no_err_stub 20
+isr_no_err_stub 21
+isr_no_err_stub 22
+isr_no_err_stub 23
+isr_no_err_stub 24
+isr_no_err_stub 25
+isr_no_err_stub 26
+isr_no_err_stub 27
+isr_no_err_stub 28
+isr_no_err_stub 29
+isr_err_stub    30
+isr_no_err_stub 31
+
+# Standard interrupts
+isr_no_err_stub 32
+isr_no_err_stub 33
+isr_no_err_stub 34
+isr_no_err_stub 35
+isr_no_err_stub 36
+isr_no_err_stub 37
+isr_no_err_stub 38
+isr_no_err_stub 39
+isr_no_err_stub 40
+isr_no_err_stub 41
+isr_no_err_stub 42
+isr_no_err_stub 43
+isr_no_err_stub 44
+isr_no_err_stub 45
+isr_no_err_stub 46
+isr_no_err_stub 47
+isr_no_err_stub 48
+isr_no_err_stub 49
+isr_no_err_stub 50
+isr_no_err_stub 51
+isr_no_err_stub 52
+isr_no_err_stub 53
+isr_no_err_stub 54
+isr_no_err_stub 55
+isr_no_err_stub 56
+isr_no_err_stub 57
+isr_no_err_stub 58
+isr_no_err_stub 59
+isr_no_err_stub 60
+isr_no_err_stub 61
+isr_no_err_stub 62
+isr_no_err_stub 63
+isr_no_err_stub 64
+isr_no_err_stub 65
+isr_no_err_stub 66
+isr_no_err_stub 67
+isr_no_err_stub 68
+isr_no_err_stub 69
+isr_no_err_stub 70
+isr_no_err_stub 71
+isr_no_err_stub 72
+isr_no_err_stub 73
+isr_no_err_stub 74
+isr_no_err_stub 75
+isr_no_err_stub 76
+isr_no_err_stub 77
+isr_no_err_stub 78
+isr_no_err_stub 79
+isr_no_err_stub 80
+isr_no_err_stub 81
+isr_no_err_stub 82
+isr_no_err_stub 83
+isr_no_err_stub 84
+isr_no_err_stub 85
+isr_no_err_stub 86
+isr_no_err_stub 87
+isr_no_err_stub 88
+isr_no_err_stub 89
+isr_no_err_stub 90
+isr_no_err_stub 91
+isr_no_err_stub 92
+isr_no_err_stub 93
+isr_no_err_stub 94
+isr_no_err_stub 95
+isr_no_err_stub 96
+isr_no_err_stub 97
+isr_no_err_stub 98
+isr_no_err_stub 99
+isr_no_err_stub 100
+isr_no_err_stub 101
+isr_no_err_stub 102
+isr_no_err_stub 103
+isr_no_err_stub 104
+isr_no_err_stub 105
+isr_no_err_stub 106
+isr_no_err_stub 107
+isr_no_err_stub 108
+isr_no_err_stub 109
+isr_no_err_stub 110
+isr_no_err_stub 111
+isr_no_err_stub 112
+isr_no_err_stub 113
+isr_no_err_stub 114
+isr_no_err_stub 115
+isr_no_err_stub 116
+isr_no_err_stub 117
+isr_no_err_stub 118
+isr_no_err_stub 119
+isr_no_err_stub 120
+isr_no_err_stub 121
+isr_no_err_stub 122
+isr_no_err_stub 123
+isr_no_err_stub 124
+isr_no_err_stub 125
+isr_no_err_stub 126
+isr_no_err_stub 127
+isr_no_err_stub 128
+isr_no_err_stub 129
+isr_no_err_stub 130
+isr_no_err_stub 131
+isr_no_err_stub 132
+isr_no_err_stub 133
+isr_no_err_stub 134
+isr_no_err_stub 135
+isr_no_err_stub 136
+isr_no_err_stub 137
+isr_no_err_stub 138
+isr_no_err_stub 139
+isr_no_err_stub 140
+isr_no_err_stub 141
+isr_no_err_stub 142
+isr_no_err_stub 143
+isr_no_err_stub 144
+isr_no_err_stub 145
+isr_no_err_stub 146
+isr_no_err_stub 147
+isr_no_err_stub 148
+isr_no_err_stub 149
+isr_no_err_stub 150
+isr_no_err_stub 151
+isr_no_err_stub 152
+isr_no_err_stub 153
+isr_no_err_stub 154
+isr_no_err_stub 155
+isr_no_err_stub 156
+isr_no_err_stub 157
+isr_no_err_stub 158
+isr_no_err_stub 159
+isr_no_err_stub 160
+isr_no_err_stub 161
+isr_no_err_stub 162
+isr_no_err_stub 163
+isr_no_err_stub 164
+isr_no_err_stub 165
+isr_no_err_stub 166
+isr_no_err_stub 167
+isr_no_err_stub 168
+isr_no_err_stub 169
+isr_no_err_stub 170
+isr_no_err_stub 171
+isr_no_err_stub 172
+isr_no_err_stub 173
+isr_no_err_stub 174
+isr_no_err_stub 175
+isr_no_err_stub 176
+isr_no_err_stub 177
+isr_no_err_stub 178
+isr_no_err_stub 179
+isr_no_err_stub 180
+isr_no_err_stub 181
+isr_no_err_stub 182
+isr_no_err_stub 183
+isr_no_err_stub 184
+isr_no_err_stub 185
+isr_no_err_stub 186
+isr_no_err_stub 187
+isr_no_err_stub 188
+isr_no_err_stub 189
+isr_no_err_stub 190
+isr_no_err_stub 191
+isr_no_err_stub 192
+isr_no_err_stub 193
+isr_no_err_stub 194
+isr_no_err_stub 195
+isr_no_err_stub 196
+isr_no_err_stub 197
+isr_no_err_stub 198
+isr_no_err_stub 199
+isr_no_err_stub 200
+isr_no_err_stub 201
+isr_no_err_stub 202
+isr_no_err_stub 203
+isr_no_err_stub 204
+isr_no_err_stub 205
+isr_no_err_stub 206
+isr_no_err_stub 207
+isr_no_err_stub 208
+isr_no_err_stub 209
+isr_no_err_stub 210
+isr_no_err_stub 211
+isr_no_err_stub 212
+isr_no_err_stub 213
+isr_no_err_stub 214
+isr_no_err_stub 215
+isr_no_err_stub 216
+isr_no_err_stub 217
+isr_no_err_stub 218
+isr_no_err_stub 219
+isr_no_err_stub 220
+isr_no_err_stub 221
+isr_no_err_stub 222
+isr_no_err_stub 223
+isr_no_err_stub 224
+isr_no_err_stub 225
+isr_no_err_stub 226
+isr_no_err_stub 227
+isr_no_err_stub 228
+isr_no_err_stub 229
+isr_no_err_stub 230
+isr_no_err_stub 231
+isr_no_err_stub 232
+isr_no_err_stub 233
+isr_no_err_stub 234
+isr_no_err_stub 235
+isr_no_err_stub 236
+isr_no_err_stub 237
+isr_no_err_stub 238
+isr_no_err_stub 239
+isr_no_err_stub 240
+isr_no_err_stub 241
+isr_no_err_stub 242
+isr_no_err_stub 243
+isr_no_err_stub 244
+isr_no_err_stub 245
+isr_no_err_stub 246
+isr_no_err_stub 247
+isr_no_err_stub 248
+isr_no_err_stub 249
+isr_no_err_stub 250
+isr_no_err_stub 251
+isr_no_err_stub 252
+isr_no_err_stub 253
+isr_no_err_stub 254
+isr_no_err_stub 255
+
+.section .data
+
+# ISR stub table
+
+.altmacro
+
+.macro isr_stub_addr irq
+    .long isr_stub_\irq
+.endm
+
+.global isr_stub_table
+isr_stub_table:
+.set i, 0
+.rept 255
+	isr_stub_addr %i
+	.set i, i+1
+.endr

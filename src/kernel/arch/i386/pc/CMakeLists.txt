@@ -3,6 +3,7 @@
 update_parent(TARGET Kernel
   SOURCES
     "boot.s"
+    "except.c"
     "gdt.c"
     "gdt.s"
     "idt.c"

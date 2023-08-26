@@ -28,7 +28,7 @@ void kernel_main(void)
     /* Initialize GDT */
     gdt_init(ring0_tss);
     /* Load kernel TSS */
-    load_tss(GDT_RING0_TSS_INDEX, 0);
+    load_tss(GDT_INDEX_RING0_TSS, 0);
     /* Initialize IDT */
     idt_init();
 

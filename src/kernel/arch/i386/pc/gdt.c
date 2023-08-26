@@ -19,7 +19,7 @@ static const gdt_data_t GDT_NULL = {};
 
 /* GDT with one null descriptor, two ring 0 segments, two ring 3 segments, and
  * the TSS segment. */
-static gdt_data_t    gdt[GDT_LENGTH];
+static gdt_data_t    gdt[GDT_LENGTH] __attribute__((aligned(4)));
 /* Array of pointers to the filled GDT entries. Size is the full GDT length
  * minus the null descriptor. */
 static gdt_entry_t * gdt_entries[GDT_LENGTH - 1];
@@ -32,7 +32,7 @@ static gdt_entry_t   ring0_tss_entry; /* Task state segment. */
 void gdt_init(tss_t const * ring0_tss)
 {
     /* Null descriptor */
-    gdt[0] = GDT_NULL;
+    gdt[GDT_INDEX_NULL] = GDT_NULL;
 
     /* Kernel code segment */
     ring0_code.base  = 0;
@@ -40,14 +40,14 @@ void gdt_init(tss_t const * ring0_tss)
     ring0_code.access =
         (uint8_t) (GDT_ACCESS_P | GDT_ACCESS_S | GDT_ACCESS_E | GDT_ACCESS_RW);
     ring0_code.flags = (uint8_t) (GDT_FLAG_G | GDT_FLAG_DB);
-    gdt_entries[0]   = &ring0_code;
+    gdt_entries[GDT_INDEX_RING0_CODE - 1] = &ring0_code;
 
     /* Kernel data segment */
     ring0_data.base   = 0;
     ring0_data.limit  = 0xFFFFF;
     ring0_data.access = (uint8_t) (GDT_ACCESS_P | GDT_ACCESS_S | GDT_ACCESS_RW);
     ring0_data.flags  = (uint8_t) (GDT_FLAG_G | GDT_FLAG_DB);
-    gdt_entries[1]    = &ring0_data;
+    gdt_entries[GDT_INDEX_RING0_DATA - 1] = &ring0_data;
 
     /* Userspace code segment */
     ring3_code.base  = 0;
@@ -56,7 +56,7 @@ void gdt_init(tss_t const * ring0_tss)
         (uint8_t) (GDT_ACCESS_P | GDT_ACCESS_DPL_3 | GDT_ACCESS_S | GDT_ACCESS_E
                    | GDT_ACCESS_RW);
     ring3_code.flags = (uint8_t) (GDT_FLAG_G | GDT_FLAG_DB);
-    gdt_entries[2]   = &ring3_code;
+    gdt_entries[GDT_INDEX_RING3_CODE - 1] = &ring3_code;
 
     /* Userspace data segment */
     ring3_data.base   = 0;
@@ -64,7 +64,7 @@ void gdt_init(tss_t const * ring0_tss)
     ring3_data.access = (uint8_t) (GDT_ACCESS_P | GDT_ACCESS_DPL_3
                                    | GDT_ACCESS_S | GDT_ACCESS_RW);
     ring3_data.flags  = (uint8_t) (GDT_FLAG_G | GDT_FLAG_DB);
-    gdt_entries[3]    = &ring3_data;
+    gdt_entries[GDT_INDEX_RING3_DATA - 1] = &ring3_data;
 
     /* Task state segment
      * Note: the functions of some bits in the TSS descriptor differ
@@ -76,11 +76,11 @@ void gdt_init(tss_t const * ring0_tss)
                    | GDT_ACCESS_E /* Indicates 32-bit */
                    | GDT_ACCESS_A /* System segment, therefore indicates TSS */
         );
-    ring0_tss_entry.flags = 0;
-    gdt_entries[4]        = &ring0_tss_entry;
+    ring0_tss_entry.flags                = 0;
+    gdt_entries[GDT_INDEX_RING0_TSS - 1] = &ring0_tss_entry;
 
     /* Encode (skip null descriptor) */
-    for (gdt_index_t i = 0; i < GDT_LENGTH - 1; ++i) {
+    for (gdt_offset_t i = 0; i < GDT_LENGTH - 1; ++i) {
         encode_gdt_entry(&gdt[i + 1], gdt_entries[i]);
     }
 

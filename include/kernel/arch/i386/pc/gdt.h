@@ -17,11 +17,19 @@
 
 #include <kernel/arch/i386/pc/tss.h>
 
-#define GDT_LENGTH          6
-#define GDT_MAX_LIMIT       0xFFFFF
-#define GDT_RING0_TSS_INDEX GDT_LENGTH - 1
+#define GDT_LENGTH    6
+#define GDT_MAX_LIMIT 0xFFFFF
 
-typedef uint16_t gdt_index_t;
+enum gdt_index {
+    GDT_INDEX_NULL       = 0,
+    GDT_INDEX_RING0_CODE = 1,
+    GDT_INDEX_RING0_DATA = 2,
+    GDT_INDEX_RING3_CODE = 3,
+    GDT_INDEX_RING3_DATA = 4,
+    GDT_INDEX_RING0_TSS  = 5
+};
+
+typedef uint16_t gdt_offset_t;
 
 /** High-level representation of a GDT segment descriptor. */
 typedef struct gdt_entry {

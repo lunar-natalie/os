@@ -2,9 +2,9 @@
 
 update_parent(TARGET Include
   SOURCES
+    "except.h"
     "gdt.h"
     "idt.h"
-    "isr.h"
     "tss.h"
     "vga.h"
 )
