@@ -37,11 +37,11 @@ Replace:
 
 Additional options:
 
-- `-Dos_ENABLE_TESTS=ON` - Enable tests
-- `-Dos_ENABLE_IMAGE=ON` - Enable bootable image creation
+- `-Dos_ENABLE_TESTS:BOOL=ON` - Enable tests
+- `-Dos_ENABLE_IMAGE:BOOL=ON` - Enable bootable image creation
 
 ```sh
-cmake -DCMAKE_BUILD_TYPE:STRING=<BUILD_TYPE> -Dos_TARGET_TRIPLET=<TARGET_TRIPLET> -Bbuild
+cmake -DCMAKE_BUILD_TYPE:STRING=<BUILD_TYPE> -Dos_TARGET_TRIPLET:STRING=<TARGET_TRIPLET> -Bbuild
 ```
 
 ## CMake: Build
