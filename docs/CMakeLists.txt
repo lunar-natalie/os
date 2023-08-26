@@ -1,4 +1,4 @@
-# Documentation build configuration.
+# Documentation build config.
 
 # Adds a Doxygen build-time command to generate documentation from the files in
 # `file_list` into `output_dir`.
