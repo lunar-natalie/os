@@ -26,8 +26,9 @@ typedef struct tss_data {
     uint32_t esp0; /** Stack pointer to load when switching to kernel mode. */
     uint32_t ss0;  /** Stack segment to load when switching to kernel mode. */
 
-    /* Unused. */
-    /* esp and ss 1 and 2 are used when switching to rings 1 or 2. */
+    /* The following members are unused. */
+    /* Note: esp and ss 1 and 2 are used when switching to rings 1 or 2. */
+
     uint32_t esp1;
     uint32_t ss1;
     uint32_t esp2;
