@@ -38,7 +38,7 @@ typedef struct idt_data {
     unsigned int selector        : 16;
     /** Only used in software; has no effect on hardware. */
     unsigned int reserved        : 8;
-    /** Type attirubtes byte. */
+    /** Type attributes byte. */
     unsigned int type_attributes : 8;
     /** Offset bits 16-31. */
     unsigned int offset_high     : 16;
@@ -48,7 +48,7 @@ typedef struct idt_data {
 enum idt_type_attributes {
     /** Present bit. Must be set for any valid descriptor. */
     IDT_ATTRIB_P     = 0b10000000,
-    /** Descriptor privellege level (ring 0-3). */
+    /** Descriptor privilege level (ring 0-3). */
     IDT_ATTRIB_DPL_1 = 0b00100000,
     IDT_ATTRIB_DPL_2 = 0b01000000,
     IDT_ATTRIB_DPL_3 = 0b01100000,

@@ -38,7 +38,7 @@ jobs:
           run-build: true
           build-args: --target ClangFormat
 
-      - name: Ammend commit and push changes
+      - name: Amend commit and push changes
         shell: bash
         run: |
           SRCDIRS=(include lib src)

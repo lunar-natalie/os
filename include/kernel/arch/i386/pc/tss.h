@@ -62,7 +62,7 @@ tss_t * tss_init_ring0();
  * Loads the TSS into the Task Register.
  *
  * @param gdt_index Index of the TSS entry in the GDT.
- * @param rpl Requested privellege level.
+ * @param rpl Requested privilege level.
  *
  * @note Must be called after the GDT has been loaded.
  */

@@ -57,7 +57,7 @@ typedef struct gdt_data {
 enum gdt_access_bits {
     /** Present bit. Must be set for any valid segment. */
     GDT_ACCESS_P     = 0b10000000,
-    /** Descriptor privellege level (ring 0-3). */
+    /** Descriptor privilege level (ring 0-3). */
     GDT_ACCESS_DPL_1 = 0b00100000,
     GDT_ACCESS_DPL_2 = 0b01000000,
     GDT_ACCESS_DPL_3 = 0b01100000,
@@ -76,7 +76,7 @@ enum gdt_access_bits {
      *
      * Conforming bit for code selectors: if clear, the segment can only be
      * executed from the ring set in the DPL; if set, the segment can be
-     * executed from any privellege level.
+     * executed from any privilege level.
      */
     GDT_ACCESS_DC    = 0b00000100,
     /**
