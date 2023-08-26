@@ -22,6 +22,5 @@ if(${PROJECT_NAME}_ENABLE_TESTS)
   else()
     add_test(NAME multiboot
       COMMAND ${GRUB_FILE} --is-x86-multiboot $<TARGET_FILE:Kernel>)
-    message("-- Kernel: enabled multiboot test")
   endif()
 endif()
