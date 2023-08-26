@@ -16,7 +16,7 @@
 #include <stdint.h>
 
 /* Task State Segment data structure. */
-typedef struct tss {
+typedef struct tss_data {
     /**
      * Previous TSS. With hardware task switching, these form a backward linked
      * list.
