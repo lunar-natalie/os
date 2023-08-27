@@ -90,7 +90,7 @@ void encode_idt_entry(idt_data_t * dest, idt_entry_t const * source);
 /**
  * @brief Loads the IDT into the IDTR register.
  *
- * @param offset 32-bit table start address.
+ * @param offset 32-bit linear table start address.
  * @param size 16-bit length of the table in bytes.
  * @return 0 if valid IDT, or 1 if invalid.
  */
