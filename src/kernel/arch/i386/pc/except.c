@@ -9,7 +9,9 @@
 
 #include <kernel/arch/i386/pc/except.h>
 
+#include <kernel/runtime.h>
+
 void __attribute__((noreturn)) exception_handler(void)
 {
-    __asm__ volatile("cli; hlt");
+    kernel_exit();
 }
