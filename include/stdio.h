@@ -14,7 +14,6 @@
 #define _STDIO_H
 
 #include <stdarg.h>
-#include <stddef.h>
 
 /**
  * Loads the data from the given locations, converts them to character string
