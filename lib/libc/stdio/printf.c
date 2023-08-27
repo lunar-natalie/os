@@ -9,36 +9,51 @@
 
 #include <stdio.h>
 
+#include <limits.h>
 #include <stdarg.h>
+#include <stddef.h>
 #include <stdint.h>
+#include <string.h>
 
 #include <kernel/tty.h>
 
-/* The maximum number of digits for an unsigned integer in base 2 is equal
- * to the number of bits of the unsigned integer type, and
- * therefore the same goes for every other base. */
-#define UINT_BITS sizeof(unsigned int) * sizeof(unsigned int)
+/* Max string buffer required when converting an int with value INT_MIN and base
+ * 2 (calculated by length in bits + negative prefix + null terminator) */
+#define ITOA_BUFSZ (sizeof(int) * CHAR_BIT) + 2
 
-unsigned int
-itoa(char * buffer, unsigned int length, unsigned int num, int base)
+char * itoa(char * dest, int value, int base)
 {
-    static const char digits[] = "0123456789ABCDEF"; /* Representation digits */
-    char *            ptr; /* Pointer to the current character in the buffer */
+    char              buffer[ITOA_BUFSZ];
+    static const char digits[36] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    /* Write null terminator */
-    ptr  = &buffer[length - 1];
-    *ptr = '\0';
+    if (base < 2 || base > 36) {
+        /* Invalid base */
+        return NULL;
+    }
 
+    /* Write from end of buffer */
+    char * ptr = &buffer[sizeof(buffer) - 1];
+    *ptr       = '\0';
+
+    /* Signed value */
+    int value_n = value < 0 ? value : -value;
+
+    /* Write digits */
     do {
-        /* Set output char to the digit char indexed by the remainder of
-         * dividing the digit by the base */
-        *--ptr = digits[num % base];
-        /* Divide by base to get to the next digit until we've got all the
-         * digits */
-        num /= base;
-    } while (num != 0);
+        /* Get next unit */
+        *(--ptr) = digits[-(value_n % base)];
+        value_n /= base;
+    } while (value_n);
 
-    return buffer - ptr; /* Number of digits written */
+    /* Prefix if signed */
+    if (value_n < 0) {
+        *(--ptr) = '-';
+    }
+
+    /* Strip leading nulls and return a copy of the string from the starting
+     * character */
+    size_t size_used = &buffer[sizeof(buffer)] - ptr;
+    return memcpy(dest, ptr, size_used);
 }
 
 int printf(const char * restrict format, ...)
@@ -58,19 +73,22 @@ int printf(const char * restrict format, ...)
 int _vprintf(const char * restrict format, va_list * const args)
 {
     int    result = 0;
-    char   type;
     int    value_arg;
     char * string_arg;
-    char   output_buffer[UINT_BITS];
-
+    char   output_buffer[ITOA_BUFSZ];
     while (*format != '\0') {
         if (*format == '%') {
-            type = *++format;
+            char type = *++format;
             /* char */
             if (type == 'c') {
                 value_arg = va_arg(*args, int);
                 tty_put_char(value_arg);
                 ++result;
+            }
+            /* string */
+            else if (type == 's') {
+                string_arg = va_arg(*args, char *);
+                result += tty_write_string(string_arg);
             }
             /* int */
             else if (type == 'd' || type == 'i') {
@@ -79,24 +97,19 @@ int _vprintf(const char * restrict format, va_list * const args)
                     value_arg = -value_arg;
                     tty_put_char('-');
                 }
-                itoa(output_buffer, UINT_BITS, value_arg, 10);
+                itoa(output_buffer, value_arg, 10);
                 result += tty_write_string(output_buffer);
             }
             /* octal */
             else if (type == 'o') {
                 value_arg = va_arg(*args, unsigned int);
-                itoa(output_buffer, UINT_BITS, value_arg, 8);
+                itoa(output_buffer, value_arg, 8);
                 result += tty_write_string(output_buffer);
-            }
-            /* string */
-            else if (type == 's') {
-                string_arg = va_arg(*args, char *);
-                result += tty_write_string(string_arg);
             }
             /* hex */
             else if (type == 'x') {
                 value_arg = va_arg(*args, unsigned int);
-                itoa(output_buffer, UINT_BITS, value_arg, 16);
+                itoa(output_buffer, value_arg, 16);
                 result += tty_write_string(output_buffer);
             }
         }
@@ -104,9 +117,7 @@ int _vprintf(const char * restrict format, va_list * const args)
             tty_put_char(*format);
             ++result;
         }
-
         ++format;
     }
-
     return result;
 }
