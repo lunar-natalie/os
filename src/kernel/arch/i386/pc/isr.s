@@ -7,37 +7,57 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+.altmacro
+
+.extern exception_handler
+
 /*
- * Creates an ISR handler `isr_stub_N` where N is the given irq. Calls the
+ * Creates an ISR handler `isr_stub_N` where N is the given IRQ. Calls the
  * default exception handler.
  */
 .macro isr_err_stub irq
-.extern \handler
-.global isr_stub_\irq
 .align 4		/* SysV ABI requires 32-bit alignment */
 isr_stub_\irq:
 	pusha
 	cld		/* SysV ABI requires DF to be clear on function entry */
 	call	exception_handler
 	popa
+
 	iret
 .endm
 
 /*
- * Creates an empty ISR handler `isr_stub_N` where N is the given irq.
+ * Creates an empty ISR handler `isr_stub_N` where N is the given IRQ.
  */
 .macro isr_no_err_stub irq
-.extern \handler
-.global isr_stub_\irq
 .align 4		/* SysV ABI requires 32-bit alignment */
 isr_stub_\irq:
 	iret
 .endm
 
+/*
+ * Assigns the address of the isr stub for a given IRQ to a long at the current
+ * location.
+ */
+.macro isr_stub_addr irq
+	.long isr_stub_\irq
+.endm
+
+.section .data
+
+/* ISR stub table for the IDT */
+.global isr_stub_table
+.align 4
+isr_stub_table:
+.set i, 0
+.rept 255
+	isr_stub_addr %i
+	.set i, i+1
+.endr
+
 .section .text
 
 /* Exception ISRs */
-.extern exception_handler
 isr_no_err_stub 0
 isr_no_err_stub 1
 isr_no_err_stub 2
@@ -296,22 +316,3 @@ isr_no_err_stub 252
 isr_no_err_stub 253
 isr_no_err_stub 254
 isr_no_err_stub 255
-
-.section .data
-
-# ISR stub table
-
-.altmacro
-
-.macro isr_stub_addr irq
-    .long isr_stub_\irq
-.endm
-
-.global isr_stub_table
-.align 4
-isr_stub_table:
-.set i, 0
-.rept 255
-	isr_stub_addr %i
-	.set i, i+1
-.endr
