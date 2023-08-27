@@ -15,7 +15,7 @@
 
 #include <stdint.h>
 
-/* Task State Segment data structure. */
+/** @brief Task State Segment data structure. */
 typedef struct tss_data {
     /**
      * Previous TSS. With hardware task switching, these form a backward linked
@@ -55,11 +55,15 @@ typedef struct tss_data {
     uint16_t iomap_base;
 } __attribute__((packed)) tss_t;
 
-/** @return Pointer to initialized kernel-mode TSS data. */
+/**
+ * @brief Initializes the kernel TSS.
+ *
+ * @return Pointer to initialized TSS data.
+ */
 tss_t * tss_init_ring0();
 
 /**
- * Loads the TSS into the Task Register.
+ * @brief Loads the TSS into the Task Register.
  *
  * @param gdt_index Index of the TSS entry in the GDT.
  * @param rpl Requested privilege level.

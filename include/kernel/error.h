@@ -14,7 +14,7 @@
 #define _KERNEL_ERROR_H
 
 /**
- * Sends the output to the terminal buffer and terminates the kernel.
+ * @brief Sends the output to the terminal buffer and terminates the kernel.
  *
  * @param format Pointer to a null-terminated byte string specifying how to
  * interpret the data. `printf` format specifiers are supported.

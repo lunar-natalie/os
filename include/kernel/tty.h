@@ -15,7 +15,8 @@
 
 #include <stddef.h>
 
-/** Initializes the terminal for output using the default kernel video mode. */
+/** @brief Initializes the terminal for output using the default kernel video
+ * mode. */
 void tty_init(void);
 
 void tty_put_char(char c);

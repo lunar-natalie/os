@@ -20,8 +20,8 @@
  * characters in a character array whose first element is pointed to by str up
  * to and not including the first null character.
  *
- * The behavior is undefined if there is no null character in the character
- * array pointed to by `str`.
+ * @details The behavior is undefined if there is no null character in the
+ * character array pointed to by `str`.
  *
  * @param str Pointer to the null-terminated byte string to be examined.
  *
@@ -33,8 +33,8 @@ size_t strlen(const char * str);
  * @brief Copies the value `(unsigned char)ch` into each of the first count
  * characters of the object pointed to by `dest`.
  *
- * The behavior is undefined if access occurs beyond the end of the dest array.
- * The behavior is undefined if dest is a null pointer.
+ * @details The behavior is undefined if access occurs beyond the end of the
+ * dest array. The behavior is undefined if dest is a null pointer.
  *
  * @param dest Pointer to the object to fill.
  * @param ch Fill byte.
@@ -48,7 +48,7 @@ void * memset(void * dest, int ch, size_t count);
  * @brief Copies `count` characters from the object pointed to by `src` to the
  * object pointed to by `dest`.
  *
- * Both objects are interpreted as arrays of `unsigned char`.
+ * @details Both objects are interpreted as arrays of `unsigned char`.
  *
  * @param dest Pointer to the object to copy to.
  * @param src Pointer to the object to copy from.

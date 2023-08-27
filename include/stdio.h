@@ -16,8 +16,10 @@
 #include <stdarg.h>
 
 /**
- * Loads the data from the given locations, converts them to character string
- * equivalents and writes the results to `stdout`.
+ * @brief Prints formatted data to `stdout`.
+ *
+ * @details Loads the data from the given locations, converts them to character
+ * string equivalents and writes the results to `stdout`.
  *
  * @param format Pointer to a null-terminated byte string specifying how to
  * interpret the data
@@ -32,8 +34,10 @@
 int printf(const char * restrict format, ...);
 
 /**
- * Loads the data from the locations, defined by `vlist`, converts them to
- * character string equivalents and writes the results to `stdout`.
+ * @brief Prints formatted data from a variable argument list to `stdout`.
+ *
+ * @details Loads the data from the locations, defined by `vlist`, converts them
+ * to character string equivalents and writes the results to `stdout`.
  *
  * @param format Pointer to a null-terminated character string specifying how to
  * interpret the data.

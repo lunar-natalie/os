@@ -17,9 +17,12 @@
 
 #include <kernel/arch/i386/pc/tss.h>
 
+/** Number of entries in the GDT. */
 #define GDT_LENGTH    6
+/** Maximum memory access limit for a GDT segment descriptor. */
 #define GDT_MAX_LIMIT 0xFFFFF
 
+/** @brief Index of each selector in the GDT. */
 enum gdt_index {
     GDT_INDEX_NULL       = 0,
     GDT_INDEX_RING0_CODE = 1,
@@ -31,7 +34,7 @@ enum gdt_index {
 
 typedef uint16_t gdt_offset_t;
 
-/** High-level representation of a GDT segment descriptor. */
+/** @brief High-level representation of a GDT segment descriptor. */
 typedef struct gdt_entry {
     /** Linear 32-bit address to the start of the segment. */
     uint32_t base;
@@ -43,7 +46,7 @@ typedef struct gdt_entry {
     uint8_t  flags;
 } gdt_entry_t;
 
-/** Writable GDT entry data arranged in bit-fields. */
+/** @brief Writable GDT entry data arranged in bit-fields. */
 typedef struct gdt_data {
     /** Limit bits 0-15. */
     unsigned int limit_low  : 16;
@@ -61,7 +64,7 @@ typedef struct gdt_data {
     unsigned int base_high  : 8;
 } __attribute__((packed)) gdt_data_t;
 
-/** GDT entry access bits. */
+/** @brief GDT entry access bits. */
 enum gdt_access_bits {
     /** Present bit. Must be set for any valid segment. */
     GDT_ACCESS_P     = 0b10000000,
@@ -96,7 +99,7 @@ enum gdt_access_bits {
     GDT_ACCESS_A     = 0b00000001
 };
 
-/** GDT entry flag bits. */
+/** @brief GDT entry flag bits. */
 enum gdt_flag_bits {
     /**
      * Granularity flag (scales segment limit). If clear, the limit is scaled in
@@ -116,15 +119,15 @@ enum gdt_flag_bits {
 };
 
 /**
- * Encodes built-in GDT entries and loads the GDT.
+ * @brief Encodes built-in GDT entries and loads the GDT.
  *
  * @param ring0_tss Pointer to the kernel-mode TSS structure.
  */
 void gdt_init(tss_t const * ring0_tss);
 
 /**
- * Encodes a GDT entry from high-level descriptor information to a packed data
- * structure interpretable by the processor.
+ * @brief Encodes a GDT entry from high-level descriptor information to a packed
+ * data structure interpretable by the processor.
  *
  * @param dest Output pointer.
  * @param source Pointer to descriptor info.
@@ -132,7 +135,7 @@ void gdt_init(tss_t const * ring0_tss);
 void encode_gdt_entry(gdt_data_t * dest, gdt_entry_t const * source);
 
 /**
- * Loads the GDT into the GDTR register.
+ * @brief Loads the GDT into the GDTR register.
  *
  * @param base 32-bit table start address.
  * @param limit 16-bit length of the table in bytes, subtracted by 1. The

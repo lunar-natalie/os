@@ -19,7 +19,7 @@
 
 typedef uint8_t idt_index_t;
 
-/** High level representation of an IDT descriptor. */
+/** @brief High level representation of an IDT descriptor. */
 typedef struct idt_entry {
     /** Address of the ISR entry point. */
     uint32_t offset;
@@ -30,7 +30,7 @@ typedef struct idt_entry {
     uint8_t  type_attributes;
 } idt_entry_t;
 
-/** Writable IDT entry data arranged in bit-fields. */
+/** @brief Writable IDT entry data arranged in bit-fields. */
 typedef struct idt_data {
     /** Offset bits 0-15. */
     unsigned int offset_low      : 16;
@@ -44,7 +44,7 @@ typedef struct idt_data {
     unsigned int offset_high     : 16;
 } __attribute__((packed)) idt_data_t;
 
-/** IDT entry type attribute bits. */
+/** @brief IDT entry type attribute bits. */
 enum idt_type_attributes {
     /** Present bit. Must be set for any valid descriptor. */
     IDT_ATTRIB_P     = 0b10000000,
@@ -61,7 +61,7 @@ enum idt_type_attributes {
     IDT_ATTRIB_GATE_TRAP32 = 0b00001111, /** 32-bit trap gate. */
 };
 
-/** Complete IDT type attribute bytes. */
+/** @brief Complete IDT type attribute bytes. */
 enum idt_types {
     IDT_TYPE_RING0_TASK   = IDT_ATTRIB_P | IDT_ATTRIB_GATE_TASK,
     IDT_TYPE_RING0_INT16  = IDT_ATTRIB_P | IDT_ATTRIB_GATE_INT16,
@@ -79,7 +79,7 @@ enum idt_types {
 };
 
 /**
- * Encodes built-in IDT entries and loads the IDT.
+ * @brief Encodes built-in IDT entries and loads the IDT.
  *
  * @note Must be called after the GDT/LDT has been loaded.
  */
@@ -88,7 +88,7 @@ void idt_init(void);
 void encode_idt_entry(idt_data_t * dest, idt_entry_t const * source);
 
 /**
- * Loads the IDT into the IDTR register.
+ * @brief Loads the IDT into the IDTR register.
  *
  * @param offset 32-bit table start address.
  * @param size 16-bit length of the table in bytes.
