@@ -308,6 +308,7 @@ isr_no_err_stub 255
 .endm
 
 .global isr_stub_table
+.align 4
 isr_stub_table:
 .set i, 0
 .rept 255
