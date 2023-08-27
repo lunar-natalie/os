@@ -27,10 +27,21 @@
  * conversion specifier, or if there are fewer arguments than required by
  * format, the behavior is undefined. If there are more arguments than required
  * by format, the extraneous arguments are evaluated and ignored.
+ *
+ * @note Incomplete implementation.
  */
 int printf(const char * restrict format, ...);
 
-/* Kernel implementation. */
-int _vprintf(const char * restrict format, va_list * const args);
+/**
+ * Loads the data from the locations, defined by `vlist`, converts them to
+ * character string equivalents and writes the results to `stdout`.
+ *
+ * @param format Pointer to a null-terminated character string specifying how to
+ * interpret the data.
+ * @param vlist Variable argument list containing the data to print.
+ *
+ * @note Incomplete implementation.
+ */
+int vprintf(const char * restrict format, va_list vlist);
 
 #endif /* _STDIO_H */

@@ -16,9 +16,7 @@ void kernel_error(const char * restrict format, ...)
 {
     va_list args;
     va_start(args, format);
-
-    _vprintf(format, &args);
-
+    vprintf(format, args);
     va_end(args);
 
     kernel_exit();
