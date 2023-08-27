@@ -39,7 +39,7 @@ add_doxygen_command(DOXYGEN_FILES
   "${DOXYGEN_ROOT_OUTPUT_DIRECTORY}")
 
 # Configure remaining options for Doxyfile.in
-string(REPLACE ";" " " DOXYGEN_STRIP_FROM_INC_PATH "${DOXYGEN_PATH_LIST}")
+string(REPLACE ";" " " DOXYGEN_STRIP_FROM_PATH "${DOXYGEN_PATH_LIST}")
 
 # Fetch external stylesheet if enabled
 if(${PROJECT_NAME}_ENABLE_STYLED_DOCS)
